@@ -9,6 +9,7 @@ module.exports = {
     'airbnb-typescript',
     'plugin:prettier/recommended',
     'plugin:@typescript-eslint/recommended',
+    'prettier',
   ],
   overrides: [],
   parser: '@typescript-eslint/parser',
@@ -31,9 +32,9 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
     'no-console': 'off',
     'no-continue': 'off',
-    'no-restricted-syntax': 'off',
     'no-shadow': 'off',
     'dot-notation': 'off',
+    'no-restricted-syntax': 'off',
     'no-unused-expressions': [
       'error',
       {
@@ -65,6 +66,17 @@ module.exports = {
       'error',
       {
         functions: false,
+      },
+    ],
+    'import/extensions': [
+      'error',
+      'ignorePackages',
+      {
+        js: 'never',
+        mjs: 'never',
+        jsx: 'never',
+        ts: 'never',
+        tsx: 'never',
       },
     ],
     '@typescript-eslint/explicit-module-boundary-types': 'off',
