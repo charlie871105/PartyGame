@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { FillType, ShapeType } from '../common/constants';
+import '../style/polygon.scss';
 
 const clipPathMap: { [key in ShapeType]: string } = {
   [ShapeType.ROUND]: `circle(50% at 50% 50%)`,
@@ -14,16 +15,26 @@ const fillMap = {
   [FillType.SPOT]: `url(/images/round.svg)`,
 };
 
-interface PolygonProps {
+export interface PolygonProps {
+  className?: string;
+  left?: string;
+  top?: string;
   size?: string;
   color?: string;
   rotate?: string;
   opacity?: string | number;
   shape?: `${ShapeType}`;
   fill?: `${FillType}`;
+  animationDuration?: string;
+  animationEnd?: () => void;
 }
 
 export function Polygon({
+  top,
+  left,
+  className,
+  animationEnd,
+  animationDuration,
   size = '10rem',
   color = 'white',
   rotate = '0deg',
@@ -37,13 +48,13 @@ export function Polygon({
   );
   const filled = useMemo(() => fillMap[fill || FillType.SPOT], [fill]);
 
-  const style = useMemo(
+  const polygonStyle = useMemo(
     () => ({
       width: size,
       height: size,
       backgroundColor: color,
-      '-webkit-mask-image': filled,
-      '-webkit-mask-size': `6%`,
+      WebkitMaskImage: filled,
+      WebkitMaskSize: `6%`,
       opacity: opacity,
       clipPath: clipPath,
       transform: `rotate(${rotate})`,
@@ -52,8 +63,12 @@ export function Polygon({
   );
 
   return (
-    <div className="frame">
-      <div className="polygon" style={style} />
+    <div
+      className={`frame absolute ${className}`}
+      style={{ left, top, animationDuration }}
+      onAnimationEnd={animationEnd}
+    >
+      <div className="polygon" style={polygonStyle} />
     </div>
   );
 }

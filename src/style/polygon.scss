@@ -1,0 +1,25 @@
+.polygon-move {
+  animation: polygon-move 10s forwards linear;
+}
+
+@keyframes polygon-move {
+  0% {
+    transform: translate(0px, 0px) rotate(0deg);
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  90% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(-10rem, 10rem) rotate(6deg);
+    opacity: 0;
+  }
+}
+
+;

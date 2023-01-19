@@ -1,0 +1,51 @@
+.bg-polygon-lt {
+  position: absolute;
+  left: -25rem;
+  top: -25rem;
+  animation: polygon-swing 40s infinite ease-in-out;
+}
+
+.bg-polygon-rb {
+  position: absolute;
+  right: -25rem;
+  bottom: -50rem;
+  transform: translate(30%, 30%);
+  animation: polygon-swing 28s infinite ease-in-out;
+}
+
+@keyframes polygon-swing {
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  50% {
+    transform: rotate(20deg);
+  }
+}
+
+.menu-btn {
+  width: 30rem;
+}
+
+.btn-polygon-lt {
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -60%);
+}
+
+.game-icon {
+  right: 0;
+  bottom: 0;
+  transform: translate(12%, 24%) rotate(-10deg);
+  opacity: 0.6;
+}
+
+.join-icon {
+  right: 0;
+  bottom: 0;
+  transform: translate(6%, 20%) rotate(-10deg);
+  opacity: 0.6;
+}
+

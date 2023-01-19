@@ -10,3 +10,7 @@ export enum FillType {
   FENCE = 'fence',
   SPOT = 'spot',
 }
+
+export enum AnimationType {
+  ROUND = 'round',
+}
