@@ -11,6 +11,26 @@ export enum FillType {
   SPOT = 'spot',
 }
 
-export enum AnimationType {
-  ROUND = 'round',
-}
+type LoadingPolygon = {
+  id: string;
+  shape: `${ShapeType}`;
+  color: string;
+};
+
+export const loadingPolygons: LoadingPolygon[] = [
+  {
+    id: '1',
+    shape: 'square',
+    color: `#FA9500`,
+  },
+  {
+    id: '2',
+    shape: 'round',
+    color: `#EB6424`,
+  },
+  {
+    id: '3',
+    shape: 'triangle',
+    color: `#F07167`,
+  },
+];

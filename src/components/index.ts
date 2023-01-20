@@ -1,4 +1,3 @@
 export * from './Polygon';
-export * from './BackGround';
+export * from './Background';
 export * from './Button';
-export * from './TransitionMask';

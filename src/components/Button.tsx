@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid';
-import React, { ReactNode, useMemo, useRef, useState } from 'react';
+import { ReactNode, useMemo, useRef, useState } from 'react';
 import '../style/button.scss';
 
 interface ButtonProps {

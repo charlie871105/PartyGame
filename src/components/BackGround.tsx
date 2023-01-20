@@ -1,4 +1,4 @@
-import React, {
+import {
   ReactNode,
   useCallback,
   useEffect,
@@ -25,7 +25,7 @@ interface FloatPolygonsProps {
   generateInterval?: number;
 }
 
-export function BackGround({
+export function Background({
   className,
   children,
   mainColor = '#f7c652',
@@ -36,7 +36,7 @@ export function BackGround({
   const createPolygonParams = useCallback(() => {
     // 變暗、偏移色相、提升飽和度，作為 polygon 候選顏色
     const darkColor = colord(mainColor).darken(0.1);
-    let hsvColor = darkColor.toHsl();
+    let hsvColor = darkColor.toHsv();
     hsvColor.s += 20;
 
     const hsvColor01 = cloneDeep(hsvColor);
@@ -106,12 +106,12 @@ export function BackGround({
   }, []);
   const backgroundStyle = useMemo(() => {
     // 變亮
-    const lightenColor = colord(mainColor).lighten(0.1).toHex();
+    const lightenColor = colord(mainColor).desaturate(0.1).lighten(0.1).toHex();
 
     // 變暗並偏移色相
-    const darkColor = colord(mainColor).darken(0.1);
+    const darkColor = colord(mainColor).saturate(0.1).darken(0.1);
 
-    const hsvColor = colord(darkColor).toHsl();
+    const hsvColor = colord(darkColor).toHsv();
 
     hsvColor.h -= 10;
 

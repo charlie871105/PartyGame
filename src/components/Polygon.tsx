@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { FillType, ShapeType } from '../common/constants';
 import '../style/polygon.scss';
 
@@ -27,6 +27,7 @@ export interface PolygonProps {
   fill?: `${FillType}`;
   animationDuration?: string;
   animationEnd?: () => void;
+  style?: React.CSSProperties;
 }
 
 export function Polygon({
@@ -41,6 +42,7 @@ export function Polygon({
   opacity = '0.4',
   shape = 'round',
   fill = 'fence',
+  style,
 }: PolygonProps) {
   const clipPath = useMemo(
     () => clipPathMap[shape || ShapeType.ROUND],
@@ -64,8 +66,8 @@ export function Polygon({
 
   return (
     <div
-      className={`frame absolute ${className}`}
-      style={{ left, top, animationDuration }}
+      className={`${className}`}
+      style={{ left, top, animationDuration, ...style }}
       onAnimationEnd={animationEnd}
     >
       <div className="polygon" style={polygonStyle} />

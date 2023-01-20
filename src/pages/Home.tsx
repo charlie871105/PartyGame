@@ -1,14 +1,20 @@
 import { useNavigate } from 'react-router-dom';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import { Polygon, BackGround, Button } from '../components';
+import { useDispatch } from 'react-redux';
+import { Background, Button, Polygon } from '../components';
 import '../style/home.scss';
+import { START_LOADING } from '../redux/reducer/loadingReducer';
+import { promiseTimeout } from '../common/utils';
+import useLoading from '../hooks/useLoading';
 
 export default function Home() {
   const navigate = useNavigate();
+  const { startLoading } = useLoading();
+
   return (
     <>
-      <BackGround className="absolute inset-0">
+      <Background className="absolute inset-0">
         <Polygon
           className="bg-polygon-lt"
           size="50rem"
@@ -27,10 +33,13 @@ export default function Home() {
           opacity="0.1"
           color="#f0a53c"
         />
-      </BackGround>
+      </Background>
       <div className="absolute inset-0 flex flex-col justify-center items-center gap-20">
         <Button
-          onClick={() => navigate('/console')}
+          onClick={async () => {
+            await startLoading();
+            navigate('/console');
+          }}
           className="menu-btn"
           label="建立派對"
           labelHoverColor="#ff9a1f"

@@ -1,0 +1,32 @@
+.round-enter,
+.round-enter-done {
+    animation-name: round-in;
+    animation-duration: 1.4s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes round-in {
+    0% {
+        clip-path: circle(3% at 46% -50%);
+        animation-timing-function: cubic-bezier(0.005, 0.920, 0.060, 0.99);
+    }
+
+    40% {
+        clip-path: circle(3% at 50% 50%);
+        animation-timing-function: cubic-bezier(0.630, -0.170, 0.140, 0.980);
+    }
+
+    100% {
+        clip-path: circle(70.7% at 50% 50%);
+    }
+}
+
+.round-exit {
+    clip-path: circle(70.7% at 50% 50%);
+}
+
+.round-exit-done {
+    clip-path: circle(40% at 140% 140%);
+    transition-duration: 0.4s;
+    transition-timing-function: ease-in-out;
+}
