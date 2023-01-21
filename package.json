@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "scripts": {
     "start": "cd client && yarn dev",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "dev": "cd server && yarn start"
   }
 }
