@@ -1,16 +1,21 @@
 import { useNavigate } from 'react-router-dom';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import { useDispatch } from 'react-redux';
 import { Background, Button, Polygon } from '../components';
-import '../style/home.scss';
-import { START_LOADING } from '../redux/reducer/loadingReducer';
-import { promiseTimeout } from '../common/utils';
 import useLoading from '../hooks/useLoading';
+import '../style/home.scss';
+import useSocket from '../hooks/useSocket';
 
 export default function Home() {
   const navigate = useNavigate();
   const { startLoading } = useLoading();
+  const { connect } = useSocket();
+
+  const startParty = async () => {
+    await startLoading();
+    connect('game-console');
+    navigate('/console');
+  };
 
   return (
     <>
@@ -36,10 +41,7 @@ export default function Home() {
       </Background>
       <div className="absolute inset-0 flex flex-col justify-center items-center gap-20">
         <Button
-          onClick={async () => {
-            await startLoading();
-            navigate('/console');
-          }}
+          onClick={startParty}
           className="menu-btn"
           label="建立派對"
           labelHoverColor="#ff9a1f"
