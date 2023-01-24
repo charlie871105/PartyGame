@@ -3,11 +3,18 @@ import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import { useDispatch } from 'react-redux';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { toast } from 'react-toastify';
-import { HomeBackground, Button, Polygon } from '../components';
+import { useState } from 'react';
+import {
+  HomeBackground,
+  Button,
+  Polygon,
+  JoinPartyDialog,
+} from '../components';
 import useLoading from '../hooks/useLoading';
 import useGameConsole from '../hooks/useGameConsole';
 import '../style/home.scss';
 import { SET_ROOM_ID } from '../redux/reducer/gameConsoleReducer';
+import { OPEN_DIALOG } from '../redux/reducer/joinPartyDialogReducer';
 
 export default function Home() {
   const navigate = useNavigate();
@@ -32,6 +39,7 @@ export default function Home() {
 
   return (
     <>
+      <JoinPartyDialog />
       <HomeBackground className="absolute inset-0">
         <Polygon
           className="bg-polygon-lt"
@@ -74,6 +82,7 @@ export default function Home() {
           />
         </Button>
         <Button
+          onClick={() => dispatch(OPEN_DIALOG())}
           className="menu-btn"
           label="加入遊戲"
           labelHoverColor="#ff9a1f"

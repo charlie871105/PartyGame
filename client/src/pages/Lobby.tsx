@@ -1,8 +1,12 @@
 import React, { useEffect } from 'react';
-import { Button, LobbyBackground, Polygon } from '../components';
-import { GameSelectPanel } from '../components/gameSelectPanel';
-import { PlayerAvatar } from '../components/PlayerAvatar';
-import { RoomIdChip } from '../components/RoomIdChip';
+import {
+  Button,
+  Polygon,
+  RoomIdChip,
+  PlayerAvatar,
+  GameSelectPanel,
+  LobbyBackground,
+} from '../components';
 import useLoading from '../hooks/useLoading';
 import '../style/lobby.scss';
 
@@ -80,15 +84,15 @@ function Lobby() {
 
             {/* <!-- 玩家清單 --> */}
             <div className="flex justify-center items-center gap-4 h-32">
-              <PlayerAvatar playerId="id" codeName="1P" />
+              <PlayerAvatar playerId="id1" codeName="1P" />
+              <PlayerAvatar playerId="id2" codeName="2P" />
+              <PlayerAvatar playerId="id3" codeName="3P" />
             </div>
           </div>
 
           {/* <!-- 選擇遊戲 --> */}
           <div className="w-1/2 flex flex-nowrap justify-center items-center flex-1 px-16">
-            {/* <Button label="◀" /> */}
             <GameSelectPanel />
-            {/* <Button label="▶" /> */}
           </div>
         </div>
       </div>
