@@ -49,6 +49,22 @@ export class RoomService {
     return this.roomsMap.has(roomId);
   }
 
+  async joinRoom(roomId: string, clientId: string) {
+    const room = this.roomsMap.get(roomId);
+
+    if (!room) {
+      return Promise.reject(`不存在 ID 為 ${roomId} 的房間`);
+    }
+
+    const isJoined = room.playerIds.includes(clientId);
+    if (isJoined) {
+      return room;
+    }
+
+    room.playerIds.push(clientId);
+    return room;
+  }
+
   deleteRoom(founderId: string) {
     const rooms = [...this.roomsMap.values()].filter(
       (room) => room.founderId === founderId,

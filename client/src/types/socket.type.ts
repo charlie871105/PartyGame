@@ -7,7 +7,7 @@ export interface Room {
 }
 
 interface EmitEvents {
-  '': () => void;
+  'player:join-room': (data: Room) => void;
 }
 
 interface OnEvents {
