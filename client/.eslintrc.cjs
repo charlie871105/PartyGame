@@ -14,9 +14,10 @@ module.exports = {
   overrides: [],
   parser: '@typescript-eslint/parser',
   parserOptions: {
+    tsconfigRootDir: __dirname,
+    project: './tsconfig.json',
     ecmaVersion: 'latest',
     sourceType: 'module',
-    project: './tsconfig.json',
     ecmaFeatures: {
       jsx: true,
     },
@@ -53,6 +54,7 @@ module.exports = {
     'prefer-const': 'off',
     'no-unused-vars': 'warn',
     'react/jsx-filename-extension': 'off',
+    'prefer-promise-reject-errors': 'off',
     'react/prop-types': 'off',
     'react/prefer-stateless-function': 'off',
     'react/no-array-index-key': 'off',

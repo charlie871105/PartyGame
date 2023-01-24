@@ -1,17 +1,17 @@
 import React, { createContext } from 'react';
-import { Socket } from 'socket.io-client';
+import { ClientSocket } from '../types/socket.type';
 
 export interface SocketContextType {
   /** Socket.io Client 物件 */
-  client?: Socket;
-  changeClient: (client: Socket) => void;
+  client?: ClientSocket;
+  changeClient: (client: ClientSocket) => void;
 }
 export type ClientSocketState = {
-  client?: Socket;
+  client?: ClientSocket;
 };
 export type ClientSocketChangeEvent = {
   type: 'change_client';
-  payload?: Socket;
+  payload?: ClientSocket;
 };
 
 export const SocketContext = createContext<SocketContextType | null>(null);

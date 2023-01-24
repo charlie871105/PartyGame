@@ -1,5 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
-import { Home, Console } from '../pages';
+import { Home, Console, Lobby } from '../pages';
 
 const router = createBrowserRouter([
   {
@@ -9,6 +9,10 @@ const router = createBrowserRouter([
   {
     path: '/console',
     element: <Console />,
+  },
+  {
+    path: '/console/lobby',
+    element: <Lobby />,
   },
 ]);
 

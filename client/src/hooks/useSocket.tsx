@@ -1,11 +1,12 @@
 import { nanoid } from 'nanoid';
 import { useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { io, Socket } from 'socket.io-client';
+import { io } from 'socket.io-client';
 import { SocketContext } from '../context/SocketContext';
-import { SET_CLIENT, SET_CLIENT_ID } from '../redux/reducer/gameReducer';
+import { SET_CLIENT, SET_CLIENT_ID } from '../redux/reducer/socketReducer';
 import { ReduxState } from '../redux/store';
-import { ClientType } from '../types/game';
+import { ClientType } from '../types/game.type';
+import { ClientSocket } from '../types/socket.type';
 
 const useSocket = () => {
   const context = useContext(SocketContext);
@@ -13,11 +14,11 @@ const useSocket = () => {
     throw new Error('Unknow Context');
   }
   const { client, changeClient } = context;
-  const game = useSelector((state: ReduxState) => state.gameReducer);
+  const socket = useSelector((state: ReduxState) => state.socketReducer);
   const dispatch = useDispatch();
 
   function connect(type: `${ClientType}`) {
-    if (!game.clientId) {
+    if (!socket.clientId) {
       const newId = nanoid();
       localStorage.setItem(`partygame:clientId`, newId);
       dispatch(SET_CLIENT_ID({ id: newId }));
@@ -28,10 +29,10 @@ const useSocket = () => {
       return client;
     }
 
-    const newClient: Socket = io('http://localhost:3000/', {
+    const newClient: ClientSocket = io('http://localhost:3000/', {
       transports: ['websocket'],
       query: {
-        clientId: game.clientId,
+        clientId: socket.clientId,
         type,
       },
     });

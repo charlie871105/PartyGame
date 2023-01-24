@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { nanoid } from 'nanoid';
-import { ClientType } from '../../types/game';
+import { ClientType } from '../../types/game.type';
 
-export interface GameState {
+export interface SocketState {
   /** 儲存於 LocalStorage 中，識別是否為同一個連線 */
   clientId: string;
 
@@ -16,19 +16,18 @@ type SetClientParams = {
   type: `${ClientType}`;
 };
 
-const initialState: GameState = {
+const initialState: SocketState = {
   clientId: localStorage.getItem(`partygame:clientId`) ?? nanoid(),
   type: undefined,
 };
 
-export const gameSlice = createSlice({
+export const socketSlice = createSlice({
   name: 'game',
   initialState,
   reducers: {
     SET_CLIENT_ID: (state, action: PayloadAction<SetClientIdParams>) => {
       const { id } = action.payload;
       state.clientId = id;
-      localStorage.setItem(`partygame:clientId`, id);
     },
     SET_CLIENT: (state, action: PayloadAction<SetClientParams>) => {
       const { type } = action.payload;
@@ -37,5 +36,5 @@ export const gameSlice = createSlice({
   },
 });
 
-export const { SET_CLIENT, SET_CLIENT_ID } = gameSlice.actions;
-export default gameSlice.reducer;
+export const { SET_CLIENT, SET_CLIENT_ID } = socketSlice.actions;
+export default socketSlice.reducer;

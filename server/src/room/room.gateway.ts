@@ -1,7 +1,6 @@
 import { WebSocketGateway } from '@nestjs/websockets';
 import { UtilsService } from 'src/utils/utils.service';
 import { RoomService } from './room.service';
-import { Socket } from 'socket.io';
 import { WsClientService } from 'src/ws-client/ws-client.service';
 import { ClientSocket } from 'src/types/socket.type';
 
