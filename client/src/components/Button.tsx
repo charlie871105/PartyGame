@@ -12,6 +12,8 @@ interface ButtonProps {
   strokeHoverColor?: string;
   strokeSize?: string;
   onClick?: () => void;
+  hoverToShowChildren?: boolean;
+  buttonContentStyle?: string;
 }
 
 export function Button({
@@ -24,6 +26,8 @@ export function Button({
   strokeColor = '#888',
   strokeHoverColor,
   labelHoverColor,
+  hoverToShowChildren = false,
+  buttonContentStyle,
 }: ButtonProps) {
   const id = useRef(nanoid());
   const [isHover, setIsHover] = useState(false);
@@ -84,9 +88,12 @@ export function Button({
       onMouseUp={handleMouseup}
       onMouseDown={handleMousedown}
     >
-      <div className={`btn-content absolute inset-0 ${hoverClass}`}>
-        {children}
-      </div>
+      {hoverToShowChildren && isHover && (
+        <div className={`${buttonContentStyle} ${hoverClass}`}>{children}</div>
+      )}
+      {!hoverToShowChildren && (
+        <div className={`${buttonContentStyle} ${hoverClass}`}>{children}</div>
+      )}
 
       <div
         className="label relative font-black tracking-widest"

@@ -1,0 +1,19 @@
+.pattern {
+    transform: rotate(-6deg) translate(2%, -5%);
+}
+
+.lobby-polygon {
+    animation: lobby-polygon 3s infinite;
+}
+
+@keyframes lobby-polygon {
+    0%,
+    100% {
+        opacity: 0.2;
+    }
+
+    30%,
+    70% {
+        opacity: 0.4;
+    }
+} ;

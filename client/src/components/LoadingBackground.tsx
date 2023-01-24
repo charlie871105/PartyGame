@@ -1,8 +1,8 @@
 import { colord } from 'colord';
 import { useMemo } from 'react';
-import { loadingPolygons, ShapeType } from '../common/constants';
-import '../style/loadingBackground.scss';
+import { loadingPolygons } from '../common/constants';
 import { Polygon } from './Polygon';
+import '../style/loadingBackground.scss';
 
 interface LoadingBackgroundProps {
   mainColor?: string;
@@ -11,9 +11,9 @@ export function LoadingBackground({
   mainColor = '#c8e6b1',
 }: LoadingBackgroundProps) {
   const backgroundStyle = useMemo(() => {
-    const lightColor = colord(mainColor).desaturate(0.2).toHex();
+    const lightColor = colord(mainColor).desaturate(0.3).toHex();
 
-    const darkColor = colord(lightColor).saturate(0.14).toHex();
+    const darkColor = colord(mainColor).saturate(0.1).toHex();
 
     const hsvColor = colord(darkColor).toHsv();
     hsvColor.h -= 15;

@@ -13,7 +13,7 @@ import { Polygon, PolygonProps } from './Polygon';
 import { FillType, ShapeType } from '../common/constants';
 import { promiseTimeout } from '../common/utils';
 
-interface FloatPolygonsProps {
+interface HomeBackgroundProps {
   className?: string;
   children?: ReactNode;
   mainColor?: string;
@@ -25,14 +25,14 @@ interface FloatPolygonsProps {
   generateInterval?: number;
 }
 
-export function Background({
+export function HomeBackground({
   className,
   children,
   mainColor = '#f7c652',
   initialQuantity = 10,
   maxQuantity = 30,
   generateInterval = 500,
-}: FloatPolygonsProps) {
+}: HomeBackgroundProps) {
   const createPolygonParams = useCallback(() => {
     // 變暗、偏移色相、提升飽和度，作為 polygon 候選顏色
     const darkColor = colord(mainColor).darken(0.1);

@@ -1,0 +1,57 @@
+.lobby-btn-content {
+    background: #62a88a;
+}
+.lobby-polygon-lt {
+    position: absolute;
+    left: -6rem;
+    top: -6rem;
+    animation: lobby-polygon-rotate 50s infinite linear;
+}
+.lobby-polygon-rb {
+    position: absolute;
+    right: -6rem;
+    bottom: -6rem;
+    animation: lobby-polygon-rotate 40s infinite linear;
+}
+@keyframes lobby-polygon-rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.lobby-polygon-beat {
+    animation: lobby-polygon-beat 1.4s infinite;
+}
+.lobby-polygon-swing {
+    animation: lobby-polygon-swing 1.8s infinite;
+}
+@keyframes lobby-polygon-beat {
+    0% {
+        transform: scale(1);
+        animation-timing-function: cubic-bezier(0, 0, 1, 0);
+    }
+    50% {
+        transform: scale(0.9);
+        animation-timing-function: cubic-bezier(0, 1, 1, 1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes lobby-polygon-swing {
+    0% {
+        transform: scale(1);
+        animation-timing-function: cubic-bezier(0.87, 0, 0.18, 0.995);
+    }
+    50% {
+        transform: scale(0.9);
+        animation-timing-function: cubic-bezier(0.87, 0, 0.26, 1.375);
+    }
+    100% {
+        transform: scale(1);
+    }
+} ;

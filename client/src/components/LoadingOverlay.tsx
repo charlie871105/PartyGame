@@ -16,7 +16,6 @@ export function LoadingOverlay() {
         timeout={{ enter: 1400, exit: 400 }}
         mountOnEnter
       >
-        {/* <div className="absolute inset-0 mask bg-white z-50" /> */}
         <LoadingBackground />
       </CSSTransition>
     </div>

@@ -3,7 +3,7 @@ import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import { useDispatch } from 'react-redux';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { toast } from 'react-toastify';
-import { Background, Button, Polygon } from '../components';
+import { HomeBackground, Button, Polygon } from '../components';
 import useLoading from '../hooks/useLoading';
 import useGameConsole from '../hooks/useGameConsole';
 import '../style/home.scss';
@@ -32,7 +32,7 @@ export default function Home() {
 
   return (
     <>
-      <Background className="absolute inset-0">
+      <HomeBackground className="absolute inset-0">
         <Polygon
           className="bg-polygon-lt"
           size="50rem"
@@ -51,7 +51,7 @@ export default function Home() {
           opacity="0.1"
           color="#f0a53c"
         />
-      </Background>
+      </HomeBackground>
       <div className="absolute inset-0 flex flex-col justify-center items-center gap-20">
         <Button
           onClick={startParty}
@@ -60,6 +60,7 @@ export default function Home() {
           labelHoverColor="#ff9a1f"
           strokeColor="#856639"
           strokeHoverColor="white"
+          buttonContentStyle="btn-content absolute inset-0"
         >
           <Polygon
             className="absolute btn-polygon-lt"
@@ -78,6 +79,7 @@ export default function Home() {
           labelHoverColor="#ff9a1f"
           strokeColor="#856639"
           strokeHoverColor="white"
+          buttonContentStyle="btn-content absolute inset-0"
         >
           <Polygon
             className="absolute btn-polygon-lt"

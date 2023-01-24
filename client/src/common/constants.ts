@@ -34,3 +34,16 @@ export const loadingPolygons: LoadingPolygon[] = [
     color: `#F07167`,
   },
 ];
+
+export const playerColorNames = [
+  'red',
+  'purple',
+  'indigo',
+  'light-blue',
+  'teal',
+  'light-green',
+  'yellow',
+  'orange',
+  'brown',
+  'blue-grey',
+];

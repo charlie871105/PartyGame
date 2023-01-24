@@ -66,7 +66,7 @@ export function Polygon({
 
   return (
     <div
-      className={`${className}`}
+      className={`${className} h-fit w-fit`}
       style={{ left, top, animationDuration, ...style }}
       onAnimationEnd={animationEnd}
     >
