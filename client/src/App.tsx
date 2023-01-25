@@ -23,11 +23,17 @@ function App() {
     }),
     [state]
   );
+
   return (
     <div id="app">
       <Provider store={store}>
         <SocketContext.Provider value={socketContext}>
-          <ToastContainer position="bottom-right" />
+          <ToastContainer
+            position="bottom-right"
+            theme="colored"
+            autoClose={1000}
+            hideProgressBar
+          />
           <LoadingOverlay />
           <RouterProvider router={router} />
         </SocketContext.Provider>

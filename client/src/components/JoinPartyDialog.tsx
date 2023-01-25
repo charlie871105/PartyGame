@@ -9,10 +9,9 @@ import {
 import React, { useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import {
-  CLOSE_DIALOG,
-  SET_TOAST_ID,
-} from '../redux/reducer/joinPartyDialogReducer';
+import useGamePlayer from '../hooks/useGamePlayer';
+import { SET_ROOM_ID } from '../redux/reducer/gameConsoleReducer';
+import { CLOSE_DIALOG } from '../redux/reducer/joinPartyDialogReducer';
 import { ReduxState } from '../redux/store';
 import '../style/joinPartyDialog.scss';
 
@@ -47,15 +46,40 @@ export function JoinPartyDialog() {
   const open = useSelector(
     (state: ReduxState) => state.joinPartyDialogReducer.open
   );
+  const { joinRoom } = useGamePlayer();
 
   const submit = async () => {
     if (!inputRef.current) return;
+
     if (!/^[0-9]{6}$/.test(inputRef.current.value)) {
       toast.error('請輸入6位數字');
       return;
     }
+
+    // create loading toast
     const loadingToastId = toast.loading('加入房間中');
-    dispatch(SET_TOAST_ID(loadingToastId));
+    try {
+      const room = await joinRoom(inputRef.current.value);
+      // 成功 更新roomId
+      console.log(`[ joinRoom ] room : `, room);
+      dispatch(SET_ROOM_ID(room.id));
+
+      // toast結束 loading
+      toast.update(loadingToastId, {
+        render: '加入房間成功',
+        type: 'success',
+        isLoading: false,
+      });
+
+      // 關閉Dialog
+      dispatch(CLOSE_DIALOG());
+    } catch (error: any) {
+      toast.update(loadingToastId, {
+        render: `加入房間失敗 : ${error?.message}`,
+        type: 'error',
+        isLoading: false,
+      });
+    }
   };
 
   return (

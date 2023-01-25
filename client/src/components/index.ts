@@ -6,5 +6,5 @@ export * from './LobbyBackground';
 export * from './LoadingBackground';
 export * from './PlayerAvatar';
 export * from './RoomIdChip';
-export * from './gameSelectPanel';
+export * from './GameSelectPanel';
 export * from './JoinPartyDialog';

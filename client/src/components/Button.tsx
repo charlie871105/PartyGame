@@ -67,6 +67,7 @@ export function Button({
   }
 
   function handleMouseleave() {
+    setIsActive(false);
     setIsHover(false);
   }
 
@@ -81,12 +82,13 @@ export function Button({
   return (
     <button
       type="button"
-      className={`btn flex justify-center items-center text-3xl p-12 rounded-full ${className} ${activeClass}`}
+      className={`btn flex overflow-hidden justify-center items-center text-3xl p-12 rounded-full ${className} ${activeClass}`}
       onClick={onClick}
       onMouseEnter={handleMouseenter}
       onMouseLeave={handleMouseleave}
       onMouseUp={handleMouseup}
       onMouseDown={handleMousedown}
+      onBlur={() => setIsActive(false)}
     >
       {hoverToShowChildren && isHover && (
         <div className={`${buttonContentStyle} ${hoverClass}`}>{children}</div>

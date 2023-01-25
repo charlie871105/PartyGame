@@ -18,7 +18,6 @@ export function LobbyBackground({
     Array(500),
     (_, i) => shapeTypes[i % shapeTypes.length]
   );
-  console.log(polygons);
 
   const backgroundStyle = useMemo(() => {
     // 變亮

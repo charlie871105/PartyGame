@@ -29,13 +29,16 @@ const useSocket = () => {
       return client;
     }
 
-    const newClient: ClientSocket = io('http://localhost:3000/', {
-      transports: ['websocket'],
-      query: {
-        clientId: socket.clientId,
-        type,
-      },
-    });
+    const newClient: ClientSocket = io(
+      `http://${import.meta.env.VITE_HOST}:3000/`,
+      {
+        transports: ['websocket'],
+        query: {
+          clientId: socket.clientId,
+          type,
+        },
+      }
+    );
 
     dispatch(SET_CLIENT({ type }));
     changeClient(newClient);

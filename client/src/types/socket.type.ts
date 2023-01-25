@@ -7,7 +7,10 @@ export interface Room {
 }
 
 interface EmitEvents {
-  'player:join-room': (data: Room) => void;
+  'player:join-room': (
+    roomId: string,
+    callback?: (err: any, res: SocketResponse<Room>) => void
+  ) => void;
 }
 
 interface OnEvents {
@@ -15,3 +18,10 @@ interface OnEvents {
 }
 
 export type ClientSocket = Socket<OnEvents, EmitEvents>;
+
+export interface SocketResponse<T = undefined> {
+  status: 'err' | 'suc';
+  message: string;
+  data?: T;
+  error?: any;
+}

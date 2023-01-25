@@ -3,7 +3,6 @@ import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import { useDispatch } from 'react-redux';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { toast } from 'react-toastify';
-import { useState } from 'react';
 import {
   HomeBackground,
   Button,
@@ -63,7 +62,7 @@ export default function Home() {
       <div className="absolute inset-0 flex flex-col justify-center items-center gap-20">
         <Button
           onClick={startParty}
-          className="menu-btn"
+          className="menu-btn relative"
           label="建立派對"
           labelHoverColor="#ff9a1f"
           strokeColor="#856639"
@@ -82,8 +81,10 @@ export default function Home() {
           />
         </Button>
         <Button
-          onClick={() => dispatch(OPEN_DIALOG())}
-          className="menu-btn"
+          onClick={() => {
+            dispatch(OPEN_DIALOG());
+          }}
+          className="menu-btn relative"
           label="加入遊戲"
           labelHoverColor="#ff9a1f"
           strokeColor="#856639"

@@ -3,12 +3,10 @@ import { Id } from 'react-toastify';
 
 export interface JoinPartyDialogState {
   open: boolean;
-  toastId?: Id;
 }
 
 const initialState: JoinPartyDialogState = {
   open: false,
-  toastId: undefined,
 };
 
 export const joinPartyDialoSlice = createSlice({
@@ -19,14 +17,10 @@ export const joinPartyDialoSlice = createSlice({
       state.open = true;
     },
     CLOSE_DIALOG: (state) => {
-      state.open = true;
-    },
-    SET_TOAST_ID: (state, action: PayloadAction<Id>) => {
-      state.toastId = action.payload;
+      state.open = false;
     },
   },
 });
 
-export const { OPEN_DIALOG, CLOSE_DIALOG, SET_TOAST_ID } =
-  joinPartyDialoSlice.actions;
+export const { OPEN_DIALOG, CLOSE_DIALOG } = joinPartyDialoSlice.actions;
 export default joinPartyDialoSlice.reducer;

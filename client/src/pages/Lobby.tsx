@@ -29,7 +29,7 @@ function Lobby() {
               <RoomIdChip color="#67785d" />
               <Button
                 label="開始遊戲"
-                className="w-96"
+                className="w-96 relative"
                 labelHoverColor="#7b916e"
                 strokeHoverColor="white"
                 hoverToShowChildren
@@ -56,7 +56,7 @@ function Lobby() {
 
               <Button
                 label="結束派對"
-                className="w-96"
+                className="w-96 relative"
                 labelHoverColor="#7b916e"
                 strokeHoverColor="white"
                 hoverToShowChildren
