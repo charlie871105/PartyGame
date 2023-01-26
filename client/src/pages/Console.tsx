@@ -1,5 +1,5 @@
-import { useCallback, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useCallback, useLayoutEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import useLoading from '../hooks/useLoading';
 import { ReduxState } from '../redux/store';
@@ -10,7 +10,7 @@ export default function Console() {
   const roomId = useSelector(
     (state: ReduxState) => state.gameConsoleReducer.roomId
   );
-  const init = useCallback(() => {
+  const redirection = useCallback(() => {
     // 房間 ID 不存在，跳回首頁
     if (!roomId) {
       navigate('/');
@@ -21,8 +21,8 @@ export default function Console() {
     navigate('lobby');
   }, [navigate, roomId, stopLoading]);
 
-  useEffect(() => {
-    init();
-  }, [init]);
-  return <div>Console</div>;
+  useLayoutEffect(() => {
+    redirection();
+  }, [redirection]);
+  return null;
 }

@@ -1,33 +1,64 @@
+import { useDispatch } from 'react-redux';
+import {
+  GameConsoleStatus,
+  GameName,
+  UPDATE_GAME_CONSOLE,
+} from '../redux/reducer/gameConsoleReducer';
 import useSocket from './useSocket';
 
 const useGameConsole = () => {
-  const { connect, close } = useSocket();
+  const { client, connect, close } = useSocket();
+  const dispatch = useDispatch();
+
+  function setStatus(status: `${GameConsoleStatus}`) {
+    dispatch(UPDATE_GAME_CONSOLE({ status }));
+
+    if (!client?.connected) {
+      return Promise.reject('client 尚未連線');
+    }
+
+    client.emit('game-console:state-update', {
+      status,
+    });
+  }
+
+  function setGameName(gameName: `${GameName}`) {
+    dispatch(UPDATE_GAME_CONSOLE({ gameName }));
+
+    if (!client?.connected) {
+      return Promise.reject('client 尚未連線');
+    }
+
+    client.emit('game-console:state-update', {
+      gameName,
+    });
+  }
 
   async function starParty() {
     close();
 
     // 開始連線
-    const client = connect('game-console');
+    const newClient = connect('game-console');
 
     return new Promise<string>((resolve, reject) => {
       // 5秒後超時
       const timer = setTimeout(() => {
         close();
-        client.removeAllListeners();
+        newClient.removeAllListeners();
 
         reject(Error('連線超時'));
       }, 3000);
 
       // 連線異常
-      client.once('connect_error', (error) => {
-        client.removeAllListeners();
+      newClient.once('connect_error', (error) => {
+        newClient.removeAllListeners();
         reject(error);
       });
 
       // 建立成功
-      client.once('game-console:room-created', async ({ id }) => {
-        client.removeAllListeners();
-        // clearTimeout(timer);
+      newClient.once('game-console:room-created', async ({ id }) => {
+        newClient.removeAllListeners();
+        clearTimeout(timer);
         resolve(id);
       });
     });
@@ -39,6 +70,10 @@ const useGameConsole = () => {
      *建立連線，並回傳房間id
      */
     starParty,
+    /** 設定遊戲狀態，會自動同步至房間內所有玩家 */
+    setStatus,
+    /** 設定遊戲名稱，會自動同步至房間內所有玩家 */
+    setGameName,
   };
 };
 

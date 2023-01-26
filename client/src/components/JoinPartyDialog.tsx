@@ -8,8 +8,10 @@ import {
 } from '@mui/material';
 import React, { useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import useGamePlayer from '../hooks/useGamePlayer';
+import useLoading from '../hooks/useLoading';
 import { SET_ROOM_ID } from '../redux/reducer/gameConsoleReducer';
 import { CLOSE_DIALOG } from '../redux/reducer/joinPartyDialogReducer';
 import { ReduxState } from '../redux/store';
@@ -43,10 +45,12 @@ const joinPartyTheme = createTheme({
 export function JoinPartyDialog() {
   const inputRef = useRef<HTMLInputElement>();
   const dispatch = useDispatch();
+  const { startLoading } = useLoading();
   const open = useSelector(
     (state: ReduxState) => state.joinPartyDialogReducer.open
   );
   const { joinRoom } = useGamePlayer();
+  const navigate = useNavigate();
 
   const submit = async () => {
     if (!inputRef.current) return;
@@ -69,15 +73,20 @@ export function JoinPartyDialog() {
         render: '加入房間成功',
         type: 'success',
         isLoading: false,
+        autoClose: 1000,
+        closeButton: true,
       });
 
       // 關閉Dialog
       dispatch(CLOSE_DIALOG());
+      await startLoading();
+      navigate('/player-gamepad');
     } catch (error: any) {
       toast.update(loadingToastId, {
         render: `加入房間失敗 : ${error?.message}`,
         type: 'error',
         isLoading: false,
+        autoClose: 1000,
       });
     }
   };

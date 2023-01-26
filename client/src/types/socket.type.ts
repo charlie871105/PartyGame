@@ -1,4 +1,5 @@
 import { Socket } from 'socket.io-client';
+import { UpdateGameConsoleState } from '../redux/reducer/gameConsoleReducer';
 
 export interface Room {
   id: string;
@@ -11,10 +12,12 @@ interface EmitEvents {
     roomId: string,
     callback?: (err: any, res: SocketResponse<Room>) => void
   ) => void;
+  'game-console:state-update': (data: UpdateGameConsoleState) => void;
 }
 
 interface OnEvents {
   'game-console:room-created': (data: Room) => void;
+  'game-console:state-update': (data: Required<UpdateGameConsoleState>) => void;
 }
 
 export type ClientSocket = Socket<OnEvents, EmitEvents>;
