@@ -1,8 +1,15 @@
+import { useContext } from 'react';
 import { Room } from '../types/socket.type';
 import useSocket from './useSocket';
+import { SocketContext } from '../context/SocketContext';
 
 const useGamePlayer = () => {
-  const { client, connect } = useSocket();
+  const context = useContext(SocketContext);
+  if (!context) {
+    throw new Error('Unknow Context');
+  }
+  const { client } = context;
+  const { connect } = useSocket();
 
   function joinRoom(roomId: string): Promise<Room> {
     return new Promise((resolve, reject) => {
@@ -49,8 +56,16 @@ const useGamePlayer = () => {
     });
   }
 
+  async function requestGameConsoleState() {
+    if (!client?.connected) {
+      return Promise.reject('client 尚未連線');
+    }
+    client.emit('player:request-game-console-state');
+  }
+
   return {
     joinRoom,
+    requestGameConsoleState,
   };
 };
 

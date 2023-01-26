@@ -17,10 +17,12 @@ const router = createBrowserRouter([
   {
     path: '/player-gamepad',
     element: <PlayerGamepad />,
-  },
-  {
-    path: '/player-gamepad/lobby',
-    element: <GamePadLobby />,
+    children: [
+      {
+        path: 'lobby',
+        element: <GamePadLobby />,
+      },
+    ],
   },
 ]);
 

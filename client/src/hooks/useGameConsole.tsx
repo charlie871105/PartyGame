@@ -1,4 +1,6 @@
+import { useContext } from 'react';
 import { useDispatch } from 'react-redux';
+import { SocketContext } from '../context/SocketContext';
 import {
   GameConsoleStatus,
   GameName,
@@ -7,7 +9,12 @@ import {
 import useSocket from './useSocket';
 
 const useGameConsole = () => {
-  const { client, connect, close } = useSocket();
+  const context = useContext(SocketContext);
+  if (!context) {
+    throw new Error('Unknow Context');
+  }
+  const { client } = context;
+  const { connect, close } = useSocket();
   const dispatch = useDispatch();
 
   function setStatus(status: `${GameConsoleStatus}`) {

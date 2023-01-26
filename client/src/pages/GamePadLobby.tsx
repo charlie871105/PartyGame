@@ -11,7 +11,7 @@ export default function GamePadLobby() {
     stopLoading();
   }, [setStatus, stopLoading]);
   return (
-    <div className="w-full h-full flex text-white select-none">
+    <div className="w-full h-full flex text-white select-none bg-black">
       GamePadLobby
     </div>
   );

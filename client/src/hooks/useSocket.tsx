@@ -50,7 +50,6 @@ const useSocket = () => {
   }
 
   return {
-    client,
     connect,
     close,
   };

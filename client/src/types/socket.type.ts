@@ -12,6 +12,7 @@ interface EmitEvents {
     roomId: string,
     callback?: (err: any, res: SocketResponse<Room>) => void
   ) => void;
+  'player:request-game-console-state': () => void;
   'game-console:state-update': (data: UpdateGameConsoleState) => void;
 }
 
