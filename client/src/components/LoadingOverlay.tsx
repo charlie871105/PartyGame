@@ -8,6 +8,7 @@ export function LoadingOverlay() {
   const isLoading = useSelector(
     (state: ReduxState) => state.loadingReducer.isLoading
   );
+
   return (
     <div className="absolute inset-0">
       <CSSTransition

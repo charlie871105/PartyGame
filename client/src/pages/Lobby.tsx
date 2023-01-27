@@ -7,15 +7,18 @@ import {
   GameSelectPanel,
   LobbyBackground,
 } from '../components';
+import useGameConsole from '../hooks/useGameConsole';
 import useLoading from '../hooks/useLoading';
 import '../style/lobby.scss';
 
 function Lobby() {
   const { stopLoading } = useLoading();
+  const { setStatus } = useGameConsole();
 
   useEffect(() => {
+    setStatus('lobby');
     stopLoading();
-  }, [stopLoading]);
+  }, [setStatus, stopLoading]);
 
   return (
     <>

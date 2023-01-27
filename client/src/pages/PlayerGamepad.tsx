@@ -1,6 +1,6 @@
 import { useCallback, useContext, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { SocketContext } from '../context/SocketContext';
 import useGamePlayer from '../hooks/useGamePlayer';
 import {
@@ -21,7 +21,6 @@ function PlayerGamepad() {
   const { roomId } = useSelector(
     (state: ReduxState) => state.gameConsoleReducer
   );
-  const firstRender = useRef(true);
 
   const updateEvent = useCallback(
     (state: UpdateGameConsoleState) => {
@@ -40,20 +39,21 @@ function PlayerGamepad() {
   );
 
   useEffect(() => {
-    if (firstRender.current) {
-      if (!roomId) {
-        navigate('/');
-      }
-      client?.on('game-console:state-update', updateEvent);
-      requestGameConsoleState();
-      return () => {
-        client?.removeListener('game-console:state-update', updateEvent);
-      };
+    if (!roomId) {
+      navigate('/');
     }
-    firstRender.current = false;
+    client?.on('game-console:state-update', updateEvent);
+    requestGameConsoleState();
+    return () => {
+      client?.removeListener('game-console:state-update', updateEvent);
+    };
   }, [client, navigate, requestGameConsoleState, roomId, updateEvent]);
 
-  return null;
+  return (
+    <div className="w-full h-full bg-black">
+      <Outlet />
+    </div>
+  );
 }
 
 export default PlayerGamepad;

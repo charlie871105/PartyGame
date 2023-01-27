@@ -9,10 +9,7 @@ interface PlayerAvatarProps {
   codeName: string;
 }
 export function PlayerAvatar({ playerId, codeName }: PlayerAvatarProps) {
-  const color = useMemo(
-    () => getPlayerColor({ codeName: codeName }),
-    [codeName]
-  );
+  const color = useMemo(() => getPlayerColor({ codeName }), [codeName]);
   return (
     <Avatar
       sx={{

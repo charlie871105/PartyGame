@@ -1,0 +1,23 @@
+.gamepad-btn {
+    position: absolute;
+    &.gamepad-up {
+        left: 50%;
+        top: 0%;
+        transform: translate(-50%, 20%);
+    }
+    &.gamepad-left {
+        left: 0%;
+        top: 50%;
+        transform: translate(20%, -50%);
+    }
+    &.gamepad-right {
+        right: 0%;
+        top: 50%;
+        transform: translate(-20%, -50%);
+    }
+    &.gamepad-down {
+        left: 50%;
+        bottom: 0%;
+        transform: translate(-50%, -20%);
+    }
+}

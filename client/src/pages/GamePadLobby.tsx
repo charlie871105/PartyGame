@@ -1,18 +1,65 @@
-import React, { useEffect } from 'react';
-import useGameConsole from '../hooks/useGameConsole';
+import { Card, CardContent, Dialog } from '@mui/material';
+import React, { useContext, useEffect, useMemo } from 'react';
+import ScreenRotationIcon from '@mui/icons-material/ScreenRotation';
+import { useSelector } from 'react-redux';
+import { GamepadButton, GamepadDirectionButton } from '../components';
 import useLoading from '../hooks/useLoading';
+import useScreenOrientation from '../hooks/useScreenOrientation';
+import useGamePlayer from '../hooks/useGamePlayer';
+import { getPlayerColor } from '../common/utils';
+import '../style/gamepadLobby.scss';
+import { SocketContext } from '../context/SocketContext';
+import { ReduxState } from '../redux/store';
 
 export default function GamePadLobby() {
   const { stopLoading } = useLoading();
-  const { setStatus } = useGameConsole();
+  const isPortrait = useScreenOrientation();
+  const playerlist = useSelector(
+    (state: ReduxState) => state.gameConsoleReducer.players
+  );
+  const clientid = useSelector(
+    (state: ReduxState) => state.socketReducer.clientId
+  );
+  const codeName = useMemo(() => {
+    const index = playerlist.findIndex(
+      (player) => player.clientId === clientid
+    );
+    if (index < 0) {
+      return 'unknown ';
+    }
+    return `${index + 1}P`;
+  }, [clientid, playerlist]);
+
+  const playerColor = getPlayerColor({ codeName });
 
   useEffect(() => {
-    setStatus('lobby');
     stopLoading();
-  }, [setStatus, stopLoading]);
+  }, [stopLoading]);
+
   return (
-    <div className="w-full h-full flex text-white select-none bg-black">
-      GamePadLobby
+    <div className="w-full h-full flex text-white select-none">
+      <div className="code-name" style={{ backgroundColor: playerColor }}>
+        {codeName}
+      </div>
+      <GamepadButton
+        onClick={() => console.log('hi')}
+        icon="done"
+        size="20rem"
+        className="absolute bottom-10 right-20"
+      />
+      <GamepadDirectionButton className="absolute bottom-5 left-8" />
+      <Dialog open={isPortrait}>
+        <Card className="p-8">
+          <CardContent className="flex flex-col items-center gap-6">
+            <ScreenRotationIcon
+              color="primary"
+              sx={{ width: '10rem', height: '10rem' }}
+            />
+            <div className="text-4xl">請將手機轉為橫向</div>
+            <div className="text-base">轉為橫向後，此視窗會自動關閉</div>
+          </CardContent>
+        </Card>
+      </Dialog>
     </div>
   );
 }

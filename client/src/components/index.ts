@@ -8,3 +8,5 @@ export * from './PlayerAvatar';
 export * from './RoomIdChip';
 export * from './GameSelectPanel';
 export * from './JoinPartyDialog';
+export * from './GamepadButton';
+export * from './GamepadDirectionButton';

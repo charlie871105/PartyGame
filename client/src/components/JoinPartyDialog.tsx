@@ -20,7 +20,7 @@ import '../style/joinPartyDialog.scss';
 const RoomCodeInput = styled(TextField)({
   input: {
     textAlign: 'center',
-    height: '3rem',
+    height: '4rem',
     boxSizing: 'border-box',
   },
   '.MuiInputBase-root': {
@@ -29,7 +29,7 @@ const RoomCodeInput = styled(TextField)({
 });
 const SubmitButton = styled(Button)({
   padding: '6px 12px',
-  height: '3rem',
+  height: '4rem',
   borderRadius: '4rem',
 });
 
@@ -92,26 +92,31 @@ export function JoinPartyDialog() {
   };
 
   return (
-    <Dialog onClose={() => dispatch(CLOSE_DIALOG())} open={open}>
-      <div className="card flex flex-col p-14 gap-8">
-        <div className="text-3xl text-center">輸入派對房間 ID</div>
-        <ThemeProvider theme={joinPartyTheme}>
-          <RoomCodeInput
-            inputRef={inputRef}
-            color="secondary"
-            type="tel"
-            placeholder="請輸入 6 位數字"
-          />
-          <SubmitButton
-            color="secondary"
-            variant="contained"
-            className="p-4"
-            onClick={submit}
-          >
-            加入
-          </SubmitButton>
-        </ThemeProvider>
-      </div>
+    <Dialog
+      PaperProps={{
+        sx: { width: '30rem', height: '30rem' },
+        className: 'card flex flex-col p-14 justify-around',
+      }}
+      onClose={() => dispatch(CLOSE_DIALOG())}
+      open={open}
+    >
+      <div className="text-3xl text-center">輸入派對房間 ID</div>
+      <ThemeProvider theme={joinPartyTheme}>
+        <RoomCodeInput
+          inputRef={inputRef}
+          color="secondary"
+          type="tel"
+          placeholder="請輸入 6 位數字"
+        />
+        <SubmitButton
+          color="secondary"
+          variant="contained"
+          className="p-4"
+          onClick={submit}
+        >
+          加入
+        </SubmitButton>
+      </ThemeProvider>
     </Dialog>
   );
 }

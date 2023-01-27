@@ -8,12 +8,12 @@
 @keyframes round-in {
     0% {
         clip-path: circle(3% at 46% -50%);
-        animation-timing-function: cubic-bezier(0.005, 0.920, 0.060, 0.99);
+        animation-timing-function: cubic-bezier(0.005, 0.92, 0.06, 0.99);
     }
 
     40% {
         clip-path: circle(3% at 50% 50%);
-        animation-timing-function: cubic-bezier(0.630, -0.170, 0.140, 0.980);
+        animation-timing-function: cubic-bezier(0.63, -0.17, 0.14, 0.98);
     }
 
     100% {
@@ -24,9 +24,12 @@
 .round-exit {
     clip-path: circle(70.7% at 50% 50%);
 }
-
-.round-exit-done {
+.round-exit-active {
     clip-path: circle(40% at 140% 140%);
     transition-duration: 0.4s;
     transition-timing-function: ease-in-out;
+}
+
+.round-exit-done {
+    display: none !important;
 }

@@ -45,6 +45,7 @@ export const gameConsoleSlice = createSlice({
       action: PayloadAction<UpdateGameConsoleState>
     ) => {
       state = { ...state, ...action.payload };
+      return state;
     },
     SET_ROOM_ID: (state, action: PayloadAction<string>) => {
       state.roomId = action.payload;

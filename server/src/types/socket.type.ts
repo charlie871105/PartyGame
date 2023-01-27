@@ -8,6 +8,7 @@ import { Room } from 'src/room/room.service';
 export interface OnEvents {
   'player:join-room': (data: Room) => void;
   'game-console:state-update': (data: UpdateGameConsoleState) => void;
+  'player:request-game-console-state': () => void;
 }
 
 export interface EmitEvents {

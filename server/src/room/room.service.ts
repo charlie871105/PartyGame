@@ -11,7 +11,7 @@ export interface Room {
   founderId: ClientId;
   playerIds: ClientId[];
 }
-export type GetRoomParams = { founderId: string } | { playeId: string };
+export type GetRoomParams = { founderId: string } | { playerId: string };
 
 @Injectable()
 export class RoomService {
@@ -40,7 +40,7 @@ export class RoomService {
       if ('founderId' in params) {
         return room.founderId === params.founderId;
       }
-      return room.playerIds.includes(params.playeId);
+      return room.playerIds.includes(params.playerId);
     });
     return result;
   }

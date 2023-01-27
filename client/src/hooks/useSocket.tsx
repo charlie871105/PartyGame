@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid';
-import { useContext } from 'react';
+import { useCallback, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { io } from 'socket.io-client';
 import { SocketContext } from '../context/SocketContext';
@@ -17,37 +17,40 @@ const useSocket = () => {
   const socket = useSelector((state: ReduxState) => state.socketReducer);
   const dispatch = useDispatch();
 
-  function connect(type: `${ClientType}`) {
-    if (!socket.clientId) {
-      const newId = nanoid();
-      localStorage.setItem(`partygame:clientId`, newId);
-      dispatch(SET_CLIENT_ID({ id: newId }));
-    }
-
-    if (client) {
-      client.connect();
-      return client;
-    }
-
-    const newClient: ClientSocket = io(
-      `http://${import.meta.env.VITE_HOST}:3000/`,
-      {
-        transports: ['websocket'],
-        query: {
-          clientId: socket.clientId,
-          type,
-        },
+  const connect = useCallback(
+    (type: `${ClientType}`) => {
+      if (!socket.clientId) {
+        const newId = nanoid();
+        localStorage.setItem(`partygame:clientId`, newId);
+        dispatch(SET_CLIENT_ID({ id: newId }));
       }
-    );
 
-    dispatch(SET_CLIENT({ type }));
-    changeClient(newClient);
-    return newClient;
-  }
+      if (client) {
+        client.connect();
+        return client;
+      }
 
-  function close() {
+      const newClient: ClientSocket = io(
+        `http://${import.meta.env.VITE_HOST}:3000/`,
+        {
+          transports: ['websocket'],
+          query: {
+            clientId: socket.clientId,
+            type,
+          },
+        }
+      );
+
+      dispatch(SET_CLIENT({ type }));
+      changeClient(newClient);
+      return newClient;
+    },
+    [changeClient, client, dispatch, socket.clientId]
+  );
+
+  const close = useCallback(() => {
     client?.close();
-  }
+  }, [client]);
 
   return {
     connect,

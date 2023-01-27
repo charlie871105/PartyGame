@@ -2,7 +2,11 @@ import React, { useMemo, useReducer } from 'react';
 import { Provider } from 'react-redux';
 import { RouterProvider } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import { LoadingOverlay } from './components';
+import {
+  GamepadButton,
+  GamepadDirectionButton,
+  LoadingOverlay,
+} from './components';
 import { clientSocketReducer, SocketContext } from './context/SocketContext';
 import { store } from './redux/store';
 import router from './router';

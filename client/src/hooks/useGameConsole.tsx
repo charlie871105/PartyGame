@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useCallback, useContext } from 'react';
 import { useDispatch } from 'react-redux';
 import { SocketContext } from '../context/SocketContext';
 import {
@@ -17,31 +17,37 @@ const useGameConsole = () => {
   const { connect, close } = useSocket();
   const dispatch = useDispatch();
 
-  function setStatus(status: `${GameConsoleStatus}`) {
-    dispatch(UPDATE_GAME_CONSOLE({ status }));
+  const setStatus = useCallback(
+    (status: `${GameConsoleStatus}`) => {
+      dispatch(UPDATE_GAME_CONSOLE({ status }));
 
-    if (!client?.connected) {
-      return Promise.reject('client 尚未連線');
-    }
+      if (!client?.connected) {
+        return Promise.reject('client 尚未連線');
+      }
 
-    client.emit('game-console:state-update', {
-      status,
-    });
-  }
+      client.emit('game-console:state-update', {
+        status,
+      });
+    },
+    [client, dispatch]
+  );
 
-  function setGameName(gameName: `${GameName}`) {
-    dispatch(UPDATE_GAME_CONSOLE({ gameName }));
+  const setGameName = useCallback(
+    (gameName: `${GameName}`) => {
+      dispatch(UPDATE_GAME_CONSOLE({ gameName }));
 
-    if (!client?.connected) {
-      return Promise.reject('client 尚未連線');
-    }
+      if (!client?.connected) {
+        return Promise.reject('client 尚未連線');
+      }
 
-    client.emit('game-console:state-update', {
-      gameName,
-    });
-  }
+      client.emit('game-console:state-update', {
+        gameName,
+      });
+    },
+    [client, dispatch]
+  );
 
-  async function starParty() {
+  const starParty = useCallback(async () => {
     close();
 
     // 開始連線
@@ -69,7 +75,7 @@ const useGameConsole = () => {
         resolve(id);
       });
     });
-  }
+  }, [close, connect]);
 
   return {
     /** 開始派對
