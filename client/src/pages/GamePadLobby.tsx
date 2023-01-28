@@ -5,10 +5,8 @@ import { useSelector } from 'react-redux';
 import { GamepadButton, GamepadDirectionButton } from '../components';
 import useLoading from '../hooks/useLoading';
 import useScreenOrientation from '../hooks/useScreenOrientation';
-import useGamePlayer from '../hooks/useGamePlayer';
 import { getPlayerColor } from '../common/utils';
 import '../style/gamepadLobby.scss';
-import { SocketContext } from '../context/SocketContext';
 import { ReduxState } from '../redux/store';
 
 export default function GamePadLobby() {
@@ -42,8 +40,7 @@ export default function GamePadLobby() {
         {codeName}
       </div>
       <GamepadButton
-        onClick={() => console.log('hi')}
-        icon="done"
+        keyName="confirm"
         size="20rem"
         className="absolute bottom-10 right-20"
       />

@@ -1,5 +1,11 @@
 import { createBrowserRouter } from 'react-router-dom';
-import { Home, Console, Lobby, PlayerGamepad, GamePadLobby } from '../pages';
+import {
+  Home,
+  Console,
+  ConsoleLobby,
+  PlayerGamepad,
+  GamePadLobby,
+} from '../pages';
 
 const router = createBrowserRouter([
   {
@@ -9,11 +15,14 @@ const router = createBrowserRouter([
   {
     path: '/console',
     element: <Console />,
+    children: [
+      {
+        path: 'lobby',
+        element: <ConsoleLobby />,
+      },
+    ],
   },
-  {
-    path: '/console/lobby',
-    element: <Lobby />,
-  },
+
   {
     path: '/player-gamepad',
     element: <PlayerGamepad />,

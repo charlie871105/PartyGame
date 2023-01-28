@@ -1,13 +1,25 @@
-import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
+import {
+  SubscribeMessage,
+  WebSocketGateway,
+  WebSocketServer,
+} from '@nestjs/websockets';
 import { UtilsService } from 'src/utils/utils.service';
 import { RoomService, Room } from './room.service';
 import { WsClientService } from 'src/ws-client/ws-client.service';
-import { ClientSocket, OnEvents, SocketResponse } from 'src/types/socket.type';
+import {
+  ClientSocket,
+  EmitEvents,
+  OnEvents,
+  SocketResponse,
+} from 'src/types/socket.type';
 import { Logger } from '@nestjs/common';
+import { Server } from 'socket.io';
 
 @WebSocketGateway()
 export class RoomGateway {
   private logger: Logger = new Logger(RoomGateway.name);
+  @WebSocketServer()
+  private server!: Server<OnEvents, EmitEvents>;
 
   constructor(
     private readonly roomService: RoomService,
@@ -31,7 +43,8 @@ export class RoomGateway {
 
     socket.emit('game-console:room-created', room);
   }
-  handleDisconnection(socket: ClientSocket) {
+
+  handleDisconnect(socket: ClientSocket) {
     const client = this.wsClienService.getClient({ socketId: socket.id });
 
     if (!client) return;
@@ -42,7 +55,16 @@ export class RoomGateway {
     }
 
     if (client.type === 'player') {
+      // 取得此玩家所在的房間
+      const room = this.roomService.getRoom({ playerId: client.id });
+
+      // 刪除玩家
       this.roomService.deletePlayer(client.id);
+
+      // 若房間存在則發送玩家資料更新
+      if (room) {
+        this.roomService.emitPlayerUpdate(room.founderId, this.server);
+      }
       return;
     }
   }
@@ -73,6 +95,9 @@ export class RoomGateway {
     try {
       const room = await this.roomService.joinRoom(roomId, client.id);
       socket.join(roomId);
+      // 發送玩家資料更新
+      this.roomService.emitPlayerUpdate(room.founderId, this.server);
+
       const result: SocketResponse<Room> = {
         status: 'suc',
         message: '加入成功',

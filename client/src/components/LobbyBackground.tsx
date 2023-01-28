@@ -1,7 +1,7 @@
 import { colord } from 'colord';
 import React, { useMemo } from 'react';
 import { ShapeType } from '../common/constants';
-import '../style/lobbyBackground.scss';
+import '../style/consoleLobbyBackground.scss';
 import { Polygon } from './Polygon';
 
 interface LobbyBackgroundProps {

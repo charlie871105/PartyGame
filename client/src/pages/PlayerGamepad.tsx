@@ -14,8 +14,8 @@ function PlayerGamepad() {
   if (!context) {
     throw new Error('Unknow Context');
   }
-  const { requestGameConsoleState } = useGamePlayer();
   const { client } = context;
+  const { requestGameConsoleState } = useGamePlayer();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { roomId } = useSelector(

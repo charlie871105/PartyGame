@@ -1,17 +1,9 @@
-export enum ClientType {
-  /** 遊戲主機 */
-  GAME_CONSOLE = 'game-console',
-  /** 玩家 */
-  PLAYER = 'player',
-}
-
 /** 按鍵類型 */
 export enum KeyName {
   UP = 'up',
   LEFT = 'left',
   RIGHT = 'right',
   DOWN = 'down',
-
   CONFIRM = 'confirm',
 }
 

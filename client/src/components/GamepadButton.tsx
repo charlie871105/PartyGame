@@ -1,7 +1,6 @@
 import { Button, createTheme, styled, ThemeProvider } from '@mui/material';
 import React, {
   MouseEvent,
-  MouseEventHandler,
   ReactNode,
   TouchEvent,
   useMemo,
@@ -12,8 +11,8 @@ import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import ArrowRighttIcon from '@mui/icons-material/ArrowRight';
-
-type GameButtonIconType = 'done' | 'up' | 'down' | 'left' | 'right';
+import { KeyName } from '../types/game.type';
+import useGamepad from '../hooks/useGamepad';
 
 interface GameButtonProps {
   btnsize?: string;
@@ -33,18 +32,17 @@ interface GamepadButtonProps {
   /** 尺寸 */
   size?: string;
   /** 按鈕內 icon 名稱 */
-  icon: GameButtonIconType;
+  keyName: `${KeyName}`;
 
   /** 按鈕底色 */
   color?: string;
   /** 按鈕觸發底色 */
   activeColor?: string;
   hoverColor?: string;
-  onClick: () => void;
 }
 
-const GameButtonIcon: { [key in GameButtonIconType]: ReactNode } = {
-  done: <DoneIcon sx={{ width: '80%', height: '80%' }} />,
+const GameButtonIcon: { [key in KeyName]: ReactNode } = {
+  confirm: <DoneIcon sx={{ width: '80%', height: '80%' }} />,
   up: <ArrowDropUpIcon sx={{ width: '80%', height: '80%' }} />,
   down: <ArrowDropDownIcon sx={{ width: '80%', height: '80%' }} />,
   right: <ArrowRighttIcon sx={{ width: '80%', height: '80%' }} />,
@@ -52,14 +50,14 @@ const GameButtonIcon: { [key in GameButtonIconType]: ReactNode } = {
 };
 
 export function GamepadButton({
+  keyName = 'confirm',
   className,
   size = '2rem',
   color = '#212121',
   hoverColor = '#757575',
   activeColor = '#eeeeee',
-  icon = 'done',
-  onClick,
 }: GamepadButtonProps) {
+  const { emitGamepadData } = useGamepad();
   const status = useRef(false);
 
   const theme = useMemo(
@@ -76,6 +74,11 @@ export function GamepadButton({
     [activeColor, color, hoverColor]
   );
 
+  const emitData = () => {
+    console.log(`[ buttonTrigger ] : `, { keyName, status: status.current });
+    emitGamepadData([{ name: keyName, value: status.current }]);
+  };
+
   const onMouseUp = (
     event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
   ) => {
@@ -83,7 +86,7 @@ export function GamepadButton({
 
     status.current = false;
 
-    onClick();
+    emitData();
   };
 
   const onMouseDown = (
@@ -92,20 +95,24 @@ export function GamepadButton({
     event.preventDefault();
 
     status.current = true;
+
+    emitData();
   };
 
   const onTouchStart = (event: TouchEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
-    status.current = false;
+    status.current = true;
 
-    onClick();
+    emitData();
   };
 
   const onTouchEnd = (event: TouchEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
-    status.current = true;
+    status.current = false;
+
+    emitData();
   };
 
   return (
@@ -115,14 +122,13 @@ export function GamepadButton({
           variant="contained"
           btnsize={size}
           color="primary"
-          onClick={onClick}
           onMouseUp={(event) => onMouseUp(event)}
           onMouseDown={(event) => onMouseDown(event)}
           onTouchStart={(event) => onTouchStart(event)}
           onTouchEnd={(event) => onTouchEnd(event)}
           onContextMenu={(e) => e.preventDefault()}
         >
-          {GameButtonIcon[icon]}
+          {GameButtonIcon[keyName]}
         </GameButton>
       </ThemeProvider>
     </div>

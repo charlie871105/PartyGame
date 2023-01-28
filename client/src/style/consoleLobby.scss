@@ -54,4 +54,19 @@
     100% {
         transform: scale(1);
     }
-} ;
+}
+
+.list-enter,
+.list-exit-done {
+    opacity: 0;
+}
+
+.list-enter-active {
+    opacity: 1;
+    transition: all 0.5s ease;
+}
+
+.list-exit-active {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}

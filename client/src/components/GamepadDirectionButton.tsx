@@ -24,30 +24,26 @@ export function GamepadDirectionButton({
       <GamepadButton
         className="gamepad-btn gamepad-up"
         color="#424242"
-        icon="up"
+        keyName="up"
         size={btnsize}
-        onClick={() => console.log('up')}
       />
       <GamepadButton
         className="gamepad-btn gamepad-left"
         color="#424242"
-        icon="left"
+        keyName="left"
         size={btnsize}
-        onClick={() => console.log('up')}
       />
       <GamepadButton
         className="gamepad-btn gamepad-right"
         color="#424242"
-        icon="right"
+        keyName="right"
         size={btnsize}
-        onClick={() => console.log('up')}
       />
       <GamepadButton
         className="gamepad-btn gamepad-down"
         color="#424242"
-        icon="down"
+        keyName="down"
         size={btnsize}
-        onClick={() => console.log('up')}
       />
     </div>
   );
