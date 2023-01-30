@@ -1,18 +1,8 @@
 import { Button, createTheme, styled, ThemeProvider } from '@mui/material';
-import React, {
-  MouseEvent,
-  ReactNode,
-  TouchEvent,
-  useMemo,
-  useRef,
-} from 'react';
-import DoneIcon from '@mui/icons-material/Done';
-import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
-import ArrowRighttIcon from '@mui/icons-material/ArrowRight';
+import React, { MouseEvent, TouchEvent, useMemo, useRef } from 'react';
 import { KeyName } from '../types/game.type';
 import useGamepad from '../hooks/useGamepad';
+import { GameButtonIcon } from '../common/constants';
 
 interface GameButtonProps {
   btnsize?: string;
@@ -40,14 +30,6 @@ interface GamepadButtonProps {
   activeColor?: string;
   hoverColor?: string;
 }
-
-const GameButtonIcon: { [key in KeyName]: ReactNode } = {
-  confirm: <DoneIcon sx={{ width: '80%', height: '80%' }} />,
-  up: <ArrowDropUpIcon sx={{ width: '80%', height: '80%' }} />,
-  down: <ArrowDropDownIcon sx={{ width: '80%', height: '80%' }} />,
-  right: <ArrowRighttIcon sx={{ width: '80%', height: '80%' }} />,
-  left: <ArrowLeftIcon sx={{ width: '80%', height: '80%' }} />,
-};
 
 export function GamepadButton({
   keyName = 'confirm',

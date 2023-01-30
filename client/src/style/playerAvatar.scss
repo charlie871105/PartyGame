@@ -1,0 +1,43 @@
+.balloon-enter-active,
+.balloon-exit-active {
+    transition-duration: 0.4s;
+    transition-timing-function: cubic-bezier(0.15, 1.535, 0.625, 1.015);
+}
+.balloon-exit-active {
+    transition-timing-function: cubic-bezier(1, 0.005, 0.15, 1.005);
+}
+.balloon-enter-from,
+.balloon-exit-done {
+    transform: translateY(100%) rotate(-30deg) !important;
+    opacity: 0 !important;
+}
+.balloon-exit-done {
+    transform: translateY(100%) scale(0.4) !important;
+}
+.balloon-box {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -100%);
+    width: 100%;
+    height: 80%;
+}
+.balloon {
+    position: absolute;
+    background: white;
+    box-shadow: 5px 5px 10px rgba(#000, 0.1);
+    border-radius: 9999px;
+    padding: 1rem 2rem;
+    font-size: 2rem;
+    &::before {
+        content: "";
+        width: 1.5rem;
+        height: 1.5rem;
+        position: absolute;
+        left: 30%;
+        bottom: 0;
+        transform: translateX(-40%) rotate(30deg);
+        background: white;
+        box-shadow: 5px 5px 10px rgba(#000, 0.01);
+    }
+}
