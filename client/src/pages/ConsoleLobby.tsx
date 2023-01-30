@@ -4,6 +4,7 @@ import React, {
   useContext,
   useEffect,
   useMemo,
+  useRef,
 } from 'react';
 import { useSelector } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -14,9 +15,13 @@ import {
   PlayerAvatar,
   GameSelectPanel,
   LobbyBackground,
+  PlayerAvatarHandle,
 } from '../components';
 import { SocketContext } from '../context/SocketContext';
 import useGameConsole from '../hooks/useGameConsole';
+import useGamepadNavigator, {
+  ControlElement,
+} from '../hooks/useGamepadNavigator';
 import useLoading from '../hooks/useLoading';
 import { ReduxState } from '../redux/store';
 import '../style/consoleLobby.scss';
@@ -33,20 +38,59 @@ function ConsoleLobby() {
   const playerList = useSelector(
     (state: ReduxState) => state.gameConsoleReducer.players
   );
+  const startGameBtnRef = useRef<ControlElement>(null);
+  const endGameBtnRef = useRef<ControlElement>(null);
+  const gameNavigator = useGamepadNavigator();
 
-  const playersInfo = useMemo(
+  const playersInfos = useMemo(
     () =>
       playerList.map((player, i) => ({
         id: player.clientId,
         codeName: `${i + 1}P`,
-        nodeRef: createRef<HTMLDivElement>(),
+        componentRef: createRef<PlayerAvatarHandle>(),
+        transitionRef: createRef<HTMLDivElement>(),
       })),
     [playerList]
   );
+
   const receiveGamepadData = useCallback(
-    (data: GamepadData) => console.log(data),
-    []
+    (data: GamepadData) => {
+      console.log(`[ onGamepadData ] data : `, data);
+
+      const lastDatum = data.keys.at(-1);
+
+      const action = lastDatum?.name;
+      const state = lastDatum?.value;
+
+      if (!action) return;
+      // 忽略按下訊號
+      if (state) return;
+
+      const targetPlayer = playersInfos.find(
+        (playerInfo) => playerInfo.id === data.playerId
+      );
+      targetPlayer?.componentRef.current?.showBalloon(action);
+
+      if (action === 'up') {
+        gameNavigator.prev();
+      }
+      if (action === 'down') {
+        gameNavigator.next();
+      }
+      if (action === 'confirm') {
+        gameNavigator.click();
+      }
+    },
+    [gameNavigator, playersInfos]
   );
+  useEffect(() => {
+    gameNavigator.addElement(startGameBtnRef);
+    gameNavigator.addElement(endGameBtnRef);
+    return () => {
+      gameNavigator.clearElement();
+    };
+  }, [endGameBtnRef, gameNavigator, startGameBtnRef]);
+
   useEffect(() => {
     setStatus('lobby');
     stopLoading();
@@ -67,12 +111,14 @@ function ConsoleLobby() {
             <div className="flex flex-col flex-1 justify-center items-center gap-14">
               <RoomIdChip color="#67785d" />
               <Button
+                ref={startGameBtnRef}
                 label="開始遊戲"
                 className="w-96 relative"
                 labelHoverColor="#7b916e"
                 strokeHoverColor="white"
                 hoverToShowChildren
                 buttonContentStyle="lobby-btn-content absolute inset-0"
+                onClick={() => console.log('start')}
               >
                 <div className="lobby-polygon-lt">
                   <Polygon
@@ -94,12 +140,14 @@ function ConsoleLobby() {
               </Button>
 
               <Button
+                ref={endGameBtnRef}
                 label="結束派對"
                 className="w-96 relative"
                 labelHoverColor="#7b916e"
                 strokeHoverColor="white"
                 hoverToShowChildren
                 buttonContentStyle="lobby-btn-content absolute inset-0"
+                onClick={() => console.log('end')}
               >
                 <div className="lobby-polygon-lt">
                   <Polygon
@@ -123,15 +171,16 @@ function ConsoleLobby() {
 
             {/* <!-- 玩家清單 --> */}
             <TransitionGroup className="flex justify-center items-center gap-4 h-32">
-              {playersInfo.map((playerInfo) => (
+              {playersInfos.map((playerInfo) => (
                 <CSSTransition
                   key={playerInfo.id}
-                  nodeRef={playerInfo.nodeRef}
+                  nodeRef={playerInfo.transitionRef}
                   timeout={500}
                   classNames="list"
                 >
-                  <div ref={playerInfo.nodeRef}>
+                  <div ref={playerInfo.transitionRef}>
                     <PlayerAvatar
+                      ref={playerInfo.componentRef}
                       playerId={playerInfo.id}
                       codeName={playerInfo.codeName}
                     />
