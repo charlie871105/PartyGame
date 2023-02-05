@@ -1,4 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
+import PenguinGame from '../game/penguin/PenguinGame';
 import {
   Home,
   Console,
@@ -6,6 +7,7 @@ import {
   PlayerGamepad,
   GamePadLobby,
 } from '../pages';
+import PlayerAnalogStick from '../pages/PlayerAnalogStick';
 
 const router = createBrowserRouter([
   {
@@ -20,6 +22,10 @@ const router = createBrowserRouter([
         path: 'lobby',
         element: <ConsoleLobby />,
       },
+      {
+        path: 'penguin',
+        element: <PenguinGame />,
+      },
     ],
   },
 
@@ -30,6 +36,10 @@ const router = createBrowserRouter([
       {
         path: 'lobby',
         element: <GamePadLobby />,
+      },
+      {
+        path: 'analog-stick',
+        element: <PlayerAnalogStick />,
       },
     ],
   },

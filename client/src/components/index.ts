@@ -10,3 +10,4 @@ export * from './GameSelectPanel';
 export * from './JoinPartyDialog';
 export * from './GamepadButton';
 export * from './GamepadDirectionButton';
+export * from './AnalogStick';

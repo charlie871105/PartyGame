@@ -1,3 +1,4 @@
+import { debounce } from 'lodash-es';
 import React, {
   createRef,
   useCallback,
@@ -7,6 +8,7 @@ import React, {
   useRef,
 } from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import {
   Button,
@@ -16,6 +18,7 @@ import {
   GameSelectPanel,
   LobbyBackground,
   PlayerAvatarHandle,
+  game,
 } from '../components';
 import { SocketContext } from '../context/SocketContext';
 import useGameConsole from '../hooks/useGameConsole';
@@ -33,14 +36,29 @@ function ConsoleLobby() {
     throw new Error('Unknow Context');
   }
   const { client } = context;
-  const { stopLoading } = useLoading();
-  const { setStatus } = useGameConsole();
+  const { startLoading, stopLoading } = useLoading();
+  const { setStatus, setGameName } = useGameConsole();
   const playerList = useSelector(
     (state: ReduxState) => state.gameConsoleReducer.players
   );
+  const navigate = useNavigate();
   const startGameBtnRef = useRef<ControlElement>(null);
   const endGameBtnRef = useRef<ControlElement>(null);
   const gameNavigator = useGamepadNavigator();
+
+  const startGame = debounce(
+    async () => {
+      await startLoading();
+      setStatus('playing');
+      setGameName(game.gameName);
+      navigate('/console/penguin');
+    },
+    3000,
+    {
+      leading: true,
+      trailing: false,
+    }
+  );
 
   const playersInfos = useMemo(
     () =>
@@ -118,7 +136,7 @@ function ConsoleLobby() {
                 strokeHoverColor="white"
                 hoverToShowChildren
                 buttonContentStyle="lobby-btn-content absolute inset-0"
-                onClick={() => console.log('start')}
+                onClick={startGame}
               >
                 <div className="lobby-polygon-lt">
                   <Polygon

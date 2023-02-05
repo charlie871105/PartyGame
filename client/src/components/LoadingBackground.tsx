@@ -1,5 +1,5 @@
 import { colord } from 'colord';
-import { forwardRef, MutableRefObject, useMemo } from 'react';
+import { forwardRef, useMemo } from 'react';
 import { loadingPolygons } from '../common/constants';
 import { Polygon } from './Polygon';
 import '../style/loadingBackground.scss';

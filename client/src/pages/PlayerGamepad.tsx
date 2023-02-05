@@ -38,16 +38,16 @@ function PlayerGamepad() {
     [dispatch, navigate]
   );
 
-  useEffect(() => {
-    if (!roomId) {
-      navigate('/');
-    }
-    client?.on('game-console:state-update', updateEvent);
-    requestGameConsoleState();
-    return () => {
-      client?.removeListener('game-console:state-update', updateEvent);
-    };
-  }, [client, navigate, requestGameConsoleState, roomId, updateEvent]);
+  // useEffect(() => {
+  //   if (!roomId) {
+  //     navigate('/');
+  //   }
+  //   client?.on('game-console:state-update', updateEvent);
+  //   requestGameConsoleState();
+  //   return () => {
+  //     client?.removeListener('game-console:state-update', updateEvent);
+  //   };
+  // }, [client, navigate, requestGameConsoleState, roomId, updateEvent]);
 
   return (
     <div className="w-full h-full bg-black">

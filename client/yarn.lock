@@ -223,10 +223,10 @@
     "@babel/helper-validator-identifier" "^7.19.1"
     to-fast-properties "^2.0.0"
 
-"@babylonjs/core@^5.42.0":
-  version "5.42.0"
-  resolved "https://registry.yarnpkg.com/@babylonjs/core/-/core-5.42.0.tgz#8fddb853f57212948a3bdaf78809c39b4751865c"
-  integrity sha512-ZER5UMvggUTFmmsc4Xjj3OA6JrZCQN424Yq4BfmrOT9IVQORCXL5eFJImMoyhJGjiCQLMlzKjCG8DTYY7IyHCA==
+"@babylonjs/core@^5.44.0":
+  version "5.44.0"
+  resolved "https://registry.yarnpkg.com/@babylonjs/core/-/core-5.44.0.tgz#92de05b7da7979efe6943a0fdc96aa90c1303ad6"
+  integrity sha512-ph41bRLY3rBRxM3MELyuFSUY+wh9EM887pfy+e9w9JiCJQsRMU8feBngliAjuPOyz3OUNgIcqZR9EJTO4pxGNg==
 
 "@babylonjs/gui@^5.42.0":
   version "5.42.0"
@@ -2707,6 +2707,11 @@ react-is@^18.0.0, react-is@^18.2.0:
   version "18.2.0"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.2.0.tgz#199431eeaaa2e09f86427efbb4f1473edb47609b"
   integrity sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==
+
+react-joystick-component@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/react-joystick-component/-/react-joystick-component-6.0.0.tgz#5768762a6c52de57215a74ef54438221afedf36b"
+  integrity sha512-kbhDrPbasELoQcUxG+YNqsjsZDV3xo0TBnGXjv/TekoLZHZmmj/X/Y85YfvEPzWos6C3YmOjQKc5gK59o+jI2w==
 
 react-reconciler@^0.27.0:
   version "0.27.0"

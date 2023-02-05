@@ -25,6 +25,7 @@ module.exports = {
   root: true,
   plugins: ['react', '@typescript-eslint', 'prettier'],
   rules: {
+    'react/no-unknown-property': 'off',
     'arrow-body-style': 'off',
     'prefer-arrow-callback': 'off',
     'react/require-default-props': 'off',
