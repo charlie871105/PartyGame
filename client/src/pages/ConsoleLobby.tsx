@@ -9,6 +9,7 @@ import React, {
 } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import {
   Button,
@@ -49,6 +50,10 @@ function ConsoleLobby() {
 
   const startGame = debounce(
     async () => {
+      if (playerList.length < 2) {
+        toast.error('至少要兩人派對才會開始喔');
+        return;
+      }
       await startLoading();
       setStatus('playing');
       setGameName(game.gameName);
@@ -60,6 +65,11 @@ function ConsoleLobby() {
       trailing: false,
     }
   );
+  const endGame = () => {
+    setStatus('home');
+    client?.disconnect();
+    navigate('/');
+  };
 
   const playersInfos = useMemo(
     () =>
@@ -166,7 +176,7 @@ function ConsoleLobby() {
                 strokeHoverColor="white"
                 hoverToShowChildren
                 buttonContentStyle="lobby-btn-content absolute inset-0"
-                onClick={() => console.log('end')}
+                onClick={endGame}
               >
                 <div className="lobby-polygon-lt">
                   <Polygon

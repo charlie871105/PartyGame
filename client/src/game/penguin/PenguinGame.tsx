@@ -1,45 +1,46 @@
 import React, {
   createRef,
-  MutableRefObject,
   useCallback,
   useContext,
   useEffect,
   useRef,
+  useState,
 } from 'react';
 import { Engine, HemisphericLight, Scene } from 'react-babylonjs';
 import { CannonJSPlugin, Color3, Vector3 } from '@babylonjs/core';
 import * as CANNON from 'cannon-es';
-import { curry, find } from 'lodash-es';
+import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { colord } from 'colord';
 import useLoading from '../../hooks/useLoading';
 import '@babylonjs/loaders';
-import Penguin, { PenguinController, PenguinProps } from './Penguin';
-import Controller from './Controller';
+import Penguin from './Penguin';
+import Controller, { PenguinModel } from './Controller';
 import { SocketContext } from '../../context/SocketContext';
-import { GamepadData, KeyName, SingleData } from '../../types/game.type';
 import { ReduxState } from '../../redux/store';
 import useGameConsole from '../../hooks/useGameConsole';
 import { getPlayerColor } from '../../common/utils';
 import { penguinInitPositions } from './penguinUtils';
 import Ice from './Ice';
 import SceneBackground from './SceneBackground';
+import GameoverDialog from '../GameoverDialog';
 
-type PenguinModel = PenguinProps & {
-  ref: MutableRefObject<PenguinController | null>;
-};
 function PenguinGame() {
   const context = useContext(SocketContext);
   if (!context) {
     throw new Error('Unknow Context');
   }
   const { client } = context;
-
-  const { stopLoading } = useLoading();
+  const { startLoading, stopLoading } = useLoading();
+  const navigate = useNavigate();
   const { getPlayerCodeName } = useGameConsole();
   const playerList = useSelector(
     (state: ReduxState) => state.gameConsoleReducer.players
   );
+
+  const isGameOver = useRef(false);
+  const [winner, setWinner] = useState('');
+  const [gameOver, setGameOver] = useState(false);
 
   const penguinModels: PenguinModel[] = playerList.map((player, i) => ({
     name: `penguin-${i}`,
@@ -50,8 +51,6 @@ function PenguinGame() {
     },
     ref: createRef(),
   }));
-
-  const penguinControllers = penguinModels.map((penguin) => penguin.ref);
 
   /** 依照玩家ID 取得對應顏色 */
   function getPenguinColor(id: string) {
@@ -69,114 +68,29 @@ function PenguinGame() {
     return position;
   }
 
-  /** 偵測企鵝碰撞事件 */
-  const detectCollideEvents = useCallback(
-    (penguins: MutableRefObject<PenguinController | null>[]) => {
-      const length = penguins.length;
-      for (let i = 0; i < length; i++) {
-        for (let j = i; j < length; j++) {
-          if (i === j) continue;
+  const backToLobby = useCallback(async () => {
+    setGameOver(false);
+    isGameOver.current = false;
+    await startLoading();
+    navigate('/console/lobby');
+  }, [navigate, startLoading]);
 
-          const aPenguin = penguins[i].current;
-          const bPenguin = penguins[j].current;
-          if (!aPenguin || !bPenguin) continue;
-
-          const aMesh = aPenguin?.mesh.current;
-          const bMesh = bPenguin?.mesh.current;
-          if (!aMesh || !bMesh) continue;
-
-          if (aMesh.intersectsMesh(bMesh)) {
-            handleCollideEvent(aPenguin, bPenguin);
-          }
-        }
-      }
+  const handleWinner = useCallback(
+    (id: string) => {
+      const winnerId = getPlayerCodeName(id);
+      setWinner(winnerId);
     },
-    []
+    [getPlayerCodeName]
   );
 
-  function handleCollideEvent(
-    aPenguin: PenguinController,
-    bPenguin: PenguinController
-  ) {
-    if (!aPenguin?.mesh.current || !bPenguin?.mesh.current) return;
-
-    const aState = aPenguin.state.current;
-    const bState = bPenguin.state.current;
-
-    // 沒有企鵝在 attack 狀態，不須動作
-    if (![aState, bState].includes('attack')) return;
-
-    const direction = bPenguin.mesh.current.position.subtract(
-      aPenguin.mesh.current.position
-    );
-    if (aState === 'attack') {
-      bPenguin.assaulted(direction);
-    } else {
-      aPenguin.assaulted(direction.multiply(new Vector3(-1, -1, -1)));
-    }
-  }
-
-  /** 根據key取得資料 */
-  const findSingleData = curry((keys: SingleData[], name: `${KeyName}`) =>
-    keys.find((key) => key.name === name)
-  );
-
-  /** 控制制定企鵝 */
-  const controlPenguin = useCallback(
-    (penguin: PenguinController, data: GamepadData) => {
-      const { keys } = data;
-      const findData = findSingleData(keys);
-
-      // 攻擊
-      const attackData = findData('attack');
-      if (attackData) {
-        console.log(penguin);
-        penguin?.attack();
-        return;
-      }
-
-      const xData = findData('x-axis');
-      const yData = findData('y-axis');
-
-      const x = xData?.value ?? 0;
-      const y = yData?.value ?? 0;
-
-      if (x === 0 && y === 0) return;
-      if (typeof x === 'number' && typeof y === 'number') {
-        penguin?.walk(new Vector3(x, 0, y));
-      }
-    },
-    [findSingleData]
-  );
+  const handleGameover = useCallback(async () => {
+    setGameOver(true);
+    isGameOver.current = true;
+  }, []);
 
   useEffect(() => {
     stopLoading();
   }, [stopLoading]);
-
-  const updateGameData = useCallback(
-    (data: GamepadData) => {
-      console.log('[ gameConsole.onGamepadData ] data : ', data);
-      const { playerId } = data;
-
-      const targetPenguinModel = penguinModels.find(
-        (penguinModel) => penguinModel.params?.ownerId === playerId
-      );
-      const penguin = targetPenguinModel?.ref.current;
-
-      if (!penguin) return;
-      controlPenguin(penguin, data);
-    },
-    [controlPenguin, penguinModels]
-  );
-
-  useEffect(() => {
-    client?.on('player:gamepad-data', updateGameData);
-
-    return () => {
-      client?.removeListener('player:gamepad-data', updateGameData);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <Engine
@@ -212,12 +126,18 @@ function PenguinGame() {
               params={penguin.params}
             />
           ))}
-          {/* detect CollideEvent */}
-          <Controller
-            register={() => detectCollideEvents(penguinControllers)}
-          />
         </SceneBackground>
+        {/* detect CollideEvent */}
+        <Controller
+          client={client!}
+          penguinModels={penguinModels}
+          isGameOver={isGameOver}
+          backToLobby={backToLobby}
+          handleGameover={handleGameover}
+          handleWinner={handleWinner}
+        />
       </Scene>
+      <GameoverDialog isGameOver={gameOver} winnerCodeName={winner} />
     </Engine>
   );
 }

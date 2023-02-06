@@ -24,7 +24,6 @@ export default function Console() {
 
   const updatePlayer = useCallback(
     (players: Player[]) => {
-      console.log(players);
       dispatch(UPDATE_GAME_CONSOLE({ players }));
     },
     [dispatch]

@@ -340,7 +340,7 @@ const Penguin = forwardRef(
         ),
       [setState]
     );
-    /** 攻擊，限制攻擊頻率，1.5 秒一次 */
+    /** 攻擊，限制攻擊頻率，2 秒一次 */
     const attack = useMemo(
       () =>
         throttle(
@@ -349,7 +349,7 @@ const Penguin = forwardRef(
             leaveAttackStateDebounce();
             setIdleStateDebounce.cancel();
           },
-          1500,
+          2000,
           {
             leading: true,
             trailing: false,
