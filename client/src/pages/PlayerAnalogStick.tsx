@@ -44,7 +44,7 @@ export default function PlayerAnalogStick() {
         {codeName}
       </div>
       <GamepadButton
-        keyName="confirm"
+        keyName="attack"
         size="20rem"
         className="absolute bottom-10 right-20"
       />

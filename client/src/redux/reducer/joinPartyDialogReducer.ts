@@ -1,5 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Id } from 'react-toastify';
+import { createSlice } from '@reduxjs/toolkit';
 
 export interface JoinPartyDialogState {
   open: boolean;

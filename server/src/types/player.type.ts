@@ -5,6 +5,9 @@ export enum KeyName {
   RIGHT = 'right',
   DOWN = 'down',
   CONFIRM = 'confirm',
+  ATTACK = 'attack',
+  X_AXIS = 'x-axis',
+  Y_AXIS = 'y-axis',
 }
 
 /** 數位訊號

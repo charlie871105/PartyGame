@@ -1,11 +1,12 @@
 import { useCallback, useContext } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useStore } from 'react-redux';
 import { SocketContext } from '../context/SocketContext';
 import {
   GameConsoleStatus,
   GameName,
   UPDATE_GAME_CONSOLE,
 } from '../redux/reducer/gameConsoleReducer';
+import { ReduxState } from '../redux/store';
 import useSocket from './useSocket';
 
 const useGameConsole = () => {
@@ -16,6 +17,7 @@ const useGameConsole = () => {
   const { client } = context;
   const { connect, close } = useSocket();
   const dispatch = useDispatch();
+  const store = useStore<ReduxState>();
 
   const setStatus = useCallback(
     (status: `${GameConsoleStatus}`) => {
@@ -24,6 +26,8 @@ const useGameConsole = () => {
       if (!client?.connected) {
         return Promise.reject('client 尚未連線');
       }
+
+      console.log('[ client setStatus ] : ', status);
 
       client.emit('game-console:state-update', {
         status,
@@ -39,7 +43,7 @@ const useGameConsole = () => {
       if (!client?.connected) {
         return Promise.reject('client 尚未連線');
       }
-
+      console.log('[ client setGameName ] : ', gameName);
       client.emit('game-console:state-update', {
         gameName,
       });
@@ -77,6 +81,19 @@ const useGameConsole = () => {
     });
   }, [close, connect]);
 
+  const getPlayerCodeName = useCallback(
+    (id: string) => {
+      const players = store.getState().gameConsoleReducer.players;
+      const index = players.findIndex(({ clientId }) => clientId === id);
+
+      if (index < 0) {
+        return 'unknown';
+      }
+      return `${index + 1}P`;
+    },
+    [store]
+  );
+
   return {
     /** 開始派對
      *
@@ -87,6 +104,8 @@ const useGameConsole = () => {
     setStatus,
     /** 設定遊戲名稱，會自動同步至房間內所有玩家 */
     setGameName,
+
+    getPlayerCodeName,
   };
 };
 

@@ -1,4 +1,4 @@
-import { playerColorNames } from './constants';
+import { playerColor } from './constants';
 
 export function promiseTimeout(time: number) {
   return new Promise((resolve) => {
@@ -9,13 +9,13 @@ export function promiseTimeout(time: number) {
 /** 取得玩家顏色 */
 export function getPlayerColor({ codeName }: { codeName: string }) {
   if (!codeName.includes('P')) {
-    return 'grey';
+    return '#9e9e9e';
   }
 
   try {
     const index = parseInt(codeName.replaceAll('P', ''), 10) - 1;
-    return playerColorNames?.[index] ?? 'grey';
+    return playerColor?.[index] ?? '#9e9e9e';
   } catch (error) {
-    return 'grey';
+    return '#9e9e9e';
   }
 }

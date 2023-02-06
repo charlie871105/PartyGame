@@ -41,6 +41,7 @@ function ConsoleLobby() {
   const playerList = useSelector(
     (state: ReduxState) => state.gameConsoleReducer.players
   );
+
   const navigate = useNavigate();
   const startGameBtnRef = useRef<ControlElement>(null);
   const endGameBtnRef = useRef<ControlElement>(null);

@@ -9,7 +9,9 @@ export enum GameConsoleStatus {
   PLAYING = 'playing',
 }
 
-export enum GameName {}
+export enum GameName {
+  PENGUIN = 'penguin',
+}
 
 export interface Player {
   clientId: string;

@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { RoomService } from 'src/room/room.service';
 import { WsClientService } from 'src/ws-client/ws-client.service';
 import { GameConsoleState, Player } from './game-console.type';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, defaults, merge } from 'lodash';
 import { EmitEvents, OnEvents } from 'src/types/socket.type';
 import { Server } from 'socket.io';
 
@@ -33,13 +33,11 @@ export class GameConsoleService {
 
     let newState: GameConsoleData;
     if (originState) {
-      newState = { ...originState, ...state };
+      newState = merge(originState, state);
     } else {
-      newState = {
-        ...cloneDeep(defauState),
-        ...state,
-      };
+      newState = defaults(state, defauState);
     }
+
     this.gameConsolesMap.set(founderId, newState);
   }
 
@@ -86,6 +84,7 @@ export class GameConsoleService {
 
     const sockets = await server.in(room.id).fetchSockets();
 
+    this.logger.log(`broacast state : `, state);
     sockets.forEach((socketItem) => [
       socketItem.emit('game-console:state-update', state),
     ]);

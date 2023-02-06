@@ -1,40 +1,75 @@
-import React, { MutableRefObject, useCallback, useEffect, useRef } from 'react';
+import React, {
+  createRef,
+  MutableRefObject,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+} from 'react';
 import { Engine, HemisphericLight, Scene } from 'react-babylonjs';
-import {
-  CannonJSPlugin,
-  Color3,
-  PhysicsImpostor,
-  Vector3,
-} from '@babylonjs/core';
+import { CannonJSPlugin, Color3, Vector3 } from '@babylonjs/core';
 import * as CANNON from 'cannon-es';
+import { curry, find } from 'lodash-es';
+import { useSelector } from 'react-redux';
+import { colord } from 'colord';
 import useLoading from '../../hooks/useLoading';
 import '@babylonjs/loaders';
 import Penguin, { PenguinController, PenguinProps } from './Penguin';
 import Controller from './Controller';
+import { SocketContext } from '../../context/SocketContext';
+import { GamepadData, KeyName, SingleData } from '../../types/game.type';
+import { ReduxState } from '../../redux/store';
+import useGameConsole from '../../hooks/useGameConsole';
+import { getPlayerColor } from '../../common/utils';
+import { penguinInitPositions } from './penguinUtils';
+import Ice from './Ice';
+import SceneBackground from './SceneBackground';
 
 type PenguinModel = PenguinProps & {
   ref: MutableRefObject<PenguinController | null>;
 };
 function PenguinGame() {
-  const { stopLoading } = useLoading();
+  const context = useContext(SocketContext);
+  if (!context) {
+    throw new Error('Unknow Context');
+  }
+  const { client } = context;
 
-  const penguinModels: PenguinModel[] = [
-    { name: 'first_penguins', ref: useRef(null) },
-    {
-      name: 'second_penguins',
-      params: {
-        position: new Vector3(5, 10, 0),
-        color: new Color3(3, 3, 0),
-        ownerId: '',
-      },
-      ref: useRef(null),
+  const { stopLoading } = useLoading();
+  const { getPlayerCodeName } = useGameConsole();
+  const playerList = useSelector(
+    (state: ReduxState) => state.gameConsoleReducer.players
+  );
+
+  const penguinModels: PenguinModel[] = playerList.map((player, i) => ({
+    name: `penguin-${i}`,
+    params: {
+      position: getPenguinPosition(i),
+      color: getPenguinColor(player.clientId),
+      ownerId: player.clientId,
     },
-  ];
-  console.log(penguinModels);
+    ref: createRef(),
+  }));
 
   const penguinControllers = penguinModels.map((penguin) => penguin.ref);
 
-  // 偵測企鵝碰撞事件
+  /** 依照玩家ID 取得對應顏色 */
+  function getPenguinColor(id: string) {
+    const codeName = getPlayerCodeName(id);
+    const color = getPlayerColor({ codeName });
+    const rgb = colord(color).toRgb();
+    return new Color3(rgb.r / 255, rgb.g / 255, rgb.b / 255);
+  }
+
+  /** 依照玩家ID 取得對應初始位置 */
+  function getPenguinPosition(index: number) {
+    const len = penguinInitPositions.length;
+    const position = penguinInitPositions[index % len];
+    position._y = Math.round(index / len) * 10 + 5;
+    return position;
+  }
+
+  /** 偵測企鵝碰撞事件 */
   const detectCollideEvents = useCallback(
     (penguins: MutableRefObject<PenguinController | null>[]) => {
       const length = penguins.length;
@@ -42,12 +77,16 @@ function PenguinGame() {
         for (let j = i; j < length; j++) {
           if (i === j) continue;
 
-          const aMesh = penguins[i]?.current?.mesh.current;
-          const bMesh = penguins[i]?.current?.mesh.current;
+          const aPenguin = penguins[i].current;
+          const bPenguin = penguins[j].current;
+          if (!aPenguin || !bPenguin) continue;
+
+          const aMesh = aPenguin?.mesh.current;
+          const bMesh = bPenguin?.mesh.current;
           if (!aMesh || !bMesh) continue;
 
           if (aMesh.intersectsMesh(bMesh)) {
-            handleCollideEvent(penguins[i].current, penguins[j].current);
+            handleCollideEvent(aPenguin, bPenguin);
           }
         }
       }
@@ -56,8 +95,8 @@ function PenguinGame() {
   );
 
   function handleCollideEvent(
-    aPenguin: PenguinController | null,
-    bPenguin: PenguinController | null
+    aPenguin: PenguinController,
+    bPenguin: PenguinController
   ) {
     if (!aPenguin?.mesh.current || !bPenguin?.mesh.current) return;
 
@@ -77,36 +116,67 @@ function PenguinGame() {
     }
   }
 
-  const keyboardEvent = (event: KeyboardEvent) => {
-    switch (event.key) {
-      case 'ArrowLeft': {
-        penguinModels[0].ref.current?.walk(new Vector3(-1, 0, 0));
-        break;
+  /** 根據key取得資料 */
+  const findSingleData = curry((keys: SingleData[], name: `${KeyName}`) =>
+    keys.find((key) => key.name === name)
+  );
+
+  /** 控制制定企鵝 */
+  const controlPenguin = useCallback(
+    (penguin: PenguinController, data: GamepadData) => {
+      const { keys } = data;
+      const findData = findSingleData(keys);
+
+      // 攻擊
+      const attackData = findData('attack');
+      if (attackData) {
+        console.log(penguin);
+        penguin?.attack();
+        return;
       }
-      case 'ArrowUp': {
-        penguinModels[0].ref.current?.walk(new Vector3(0, 0, 1));
-        break;
+
+      const xData = findData('x-axis');
+      const yData = findData('y-axis');
+
+      const x = xData?.value ?? 0;
+      const y = yData?.value ?? 0;
+
+      if (x === 0 && y === 0) return;
+      if (typeof x === 'number' && typeof y === 'number') {
+        penguin?.walk(new Vector3(x, 0, y));
       }
-      case 'ArrowRight': {
-        penguinModels[0].ref.current?.walk(new Vector3(1, 0, 0));
-        break;
-      }
-      case 'ArrowDown': {
-        penguinModels[0].ref.current?.walk(new Vector3(0, 0, -1));
-        break;
-      }
-      case ' ': {
-        penguinModels[0].ref.current?.attack();
-        break;
-      }
-      default:
-        break;
-    }
-  };
+    },
+    [findSingleData]
+  );
 
   useEffect(() => {
     stopLoading();
   }, [stopLoading]);
+
+  const updateGameData = useCallback(
+    (data: GamepadData) => {
+      console.log('[ gameConsole.onGamepadData ] data : ', data);
+      const { playerId } = data;
+
+      const targetPenguinModel = penguinModels.find(
+        (penguinModel) => penguinModel.params?.ownerId === playerId
+      );
+      const penguin = targetPenguinModel?.ref.current;
+
+      if (!penguin) return;
+      controlPenguin(penguin, data);
+    },
+    [controlPenguin, penguinModels]
+  );
+
+  useEffect(() => {
+    client?.on('player:gamepad-data', updateGameData);
+
+    return () => {
+      client?.removeListener('player:gamepad-data', updateGameData);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Engine
@@ -118,9 +188,6 @@ function PenguinGame() {
       }}
     >
       <Scene
-        onSceneMount={() => {
-          document.addEventListener('keydown', keyboardEvent);
-        }}
         enablePhysics={[
           new Vector3(0, -9.81, 0),
           new CannonJSPlugin(true, 8, CANNON),
@@ -134,39 +201,22 @@ function PenguinGame() {
           radius={34}
         />
         <HemisphericLight />
-        <ground name="sea" width={1000} height={1000}>
-          <backgroundMaterial
-            name="seaMaterial"
-            primaryColor={new Color3(0.57, 0.7, 0.83)}
-            useRGBColor={false}
-          >
-            <box
-              name="ice"
-              width={30}
-              depth={30}
-              height={4}
-              position={new Vector3(0, 1, 0)}
-              rotation={Vector3.Zero()}
-            >
-              <standardMaterial name="iceMaterial" />
-              <physicsImpostor
-                type={PhysicsImpostor.BoxImpostor}
-                _options={{ mass: 0, friction: 0, restitution: 0 }}
-              />
-            </box>
-            {penguinModels.map((penguin) => (
-              <Penguin
-                key={penguin.name}
-                ref={penguin.ref}
-                name={penguin.name}
-                params={penguin.params}
-              />
-            ))}
-            <Controller
-              register={() => detectCollideEvents(penguinControllers)}
+        <SceneBackground>
+          <Ice />
+          {/* create penguin */}
+          {penguinModels.map((penguin) => (
+            <Penguin
+              key={penguin.name}
+              ref={penguin.ref}
+              name={penguin.name}
+              params={penguin.params}
             />
-          </backgroundMaterial>
-        </ground>
+          ))}
+          {/* detect CollideEvent */}
+          <Controller
+            register={() => detectCollideEvents(penguinControllers)}
+          />
+        </SceneBackground>
       </Scene>
     </Engine>
   );

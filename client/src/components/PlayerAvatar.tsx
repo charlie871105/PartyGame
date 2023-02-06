@@ -41,7 +41,6 @@ export const PlayerAvatar = forwardRef(
     );
 
     function showBalloon(text: Message) {
-      console.log(text);
       setMessage(text);
       hideBalloon();
     }

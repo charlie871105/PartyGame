@@ -1,5 +1,5 @@
 import { Card, CardContent, Dialog } from '@mui/material';
-import React, { useContext, useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import ScreenRotationIcon from '@mui/icons-material/ScreenRotation';
 import { useSelector } from 'react-redux';
 import { GamepadButton, GamepadDirectionButton } from '../components';

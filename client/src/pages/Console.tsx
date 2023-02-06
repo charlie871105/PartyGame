@@ -32,11 +32,11 @@ export default function Console() {
 
   useEffect(() => {
     // 房間 ID 不存在，跳回首頁
-    // if (!roomId) {
-    //   navigate('/');
-    //   stopLoading();
-    //   return;
-    // }
+    if (!roomId) {
+      navigate('/');
+      stopLoading();
+      return;
+    }
     client?.on('game-console:player-update', updatePlayer);
 
     // 跳轉至遊戲大廳

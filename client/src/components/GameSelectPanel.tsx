@@ -1,9 +1,6 @@
 import React from 'react';
+import { GameName } from '../redux/reducer/gameConsoleReducer';
 import '../style/gameSelectPanel.scss';
-
-export enum GameName {
-  PENGUIN = 'penguin',
-}
 
 export interface GameInfo {
   name: string;
@@ -11,7 +8,7 @@ export interface GameInfo {
   gameName: `${GameName}`;
   videoSrc: string;
 }
-export const game = {
+export const game: GameInfo = {
   name: '企鵝遊戲',
   description:
     '企鵝群下水前，會將最前頭的企鵝踢下水，確認水中沒有天敵後才會下水，努力不要被踢下水吧！',
