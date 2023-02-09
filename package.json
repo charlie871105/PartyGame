@@ -2,7 +2,7 @@
   "name": "PartyGame",
   "version": "1.0.0",
   "scripts": {
-    "start": "cd client && yarn dev",
-    "dev": "cd server && yarn start"
+    "start": "cd client && yarn start",
+    "dev": "cd server && yarn dev"
   }
 }
