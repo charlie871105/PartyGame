@@ -1,7 +1,6 @@
 # PartyGame
 
-[![](https://i.imgur.com/a0YINuO.png)](https://youtu.be/vo5YG96lcps)
-上圖附有影片連結
+![](https://i.imgur.com/a0YINuO.png)
 
 > 此專案參考 [2022 鐵人賽 派對動物嗨起來](https://ithelp.ithome.com.tw/users/20140213/ironman/5661) 主要用來學習 babylon.js，與教學不同的地方在於本專案的框架採用React，內部所使用之素材皆由該鐵人賽中取得，非營利用途，僅為學習用途。
 
